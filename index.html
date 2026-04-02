@@ -42,8 +42,8 @@
     </header>
 
     <div class="bg-gradient-to-br from-zinc-900 to-black py-16 text-center">
-        <h2 class="text-5xl font-bold tracking-tight">Популярний алкоголь з фото пляшок</h2>
-        <p class="mt-4 text-2xl text-zinc-400">Реальні товари та фото з okwine.ua</p>
+        <h2 class="text-5xl font-bold tracking-tight">Популярний алкоголь з реальними фото</h2>
+        <p class="mt-4 text-2xl text-zinc-400">Товари з okwine.ua • Без повторів</p>
     </div>
 
     <section id="catalog" class="max-w-7xl mx-auto px-6 py-12">
@@ -87,32 +87,44 @@
         let CHAT_ID = "твій_chat_id";   // ← заміни на свій
 
         const products = [
+            // Горілка
             {id:1, name:"Nemiroff Делікат", cat:"горілка", price:199, vol:"0.7л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/07a13480-4c2c-11ec-bcff-7df9c3028708.jpg"},
             {id:2, name:"Хортиця Класична", cat:"горілка", price:169, vol:"0.5л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/hortitsya.jpg"},
-            {id:3, name:"Absolut", cat:"горілка", price:449, vol:"0.7л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/absolut.jpg"},
-            {id:501, name:"Corona Extra", cat:"пиво", price:69, vol:"0.355л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/corona.jpg"},
-            {id:503, name:"Budweiser", cat:"пиво", price:59, vol:"0.5л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/budweiser.jpg"},
-            {id:64, name:"Heineken", cat:"пиво", price:55, vol:"0.5л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/heineken.jpg"},
-            {id:201, name:"Jameson", cat:"віскі", price:699, vol:"0.7л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/jameson.jpg"},
-            {id:202, name:"Jack Daniel's", cat:"віскі", price:799, vol:"0.7л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/jackdaniels.jpg"},
-            {id:211, name:"Captain Morgan", cat:"ром", price:499, vol:"0.7л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/captainmorgan.jpg"},
-            {id:212, name:"Bacardi Superior", cat:"ром", price:549, vol:"0.7л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/bacardi.jpg"},
-            {id:401, name:"Каберне Совіньйон Франція", cat:"вино", price:279, vol:"0.75л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/cabernet.jpg"},
-            {id:402, name:"Шардоне Бургундія", cat:"вино", price:319, vol:"0.75л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/chardonnay.jpg"}
-        ];
+            {id:3, name:"Гетьман", cat:"горілка", price:189, vol:"0.7л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/getman.jpg"},
+            {id:4, name:"Absolut", cat:"горілка", price:449, vol:"0.7л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/absolut.jpg"},
+            {id:5, name:"Finlandia", cat:"горілка", price:399, vol:"0.7л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/finlandia.jpg"},
+            {id:6, name:"Русский Стандарт", cat:"горілка", price:289, vol:"0.7л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/russian-standard.jpg"},
+            {id:7, name:"Смирнофф Ред", cat:"горілка", price:249, vol:"0.5л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/smirnoff.jpg"},
+            {id:8, name:"Белуга Нобл", cat:"горілка", price:899, vol:"0.75л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/beluga.jpg"},
 
-        // Доповнюємо масив (можеш додавати ще вручну)
-        for (let i = 213; i <= 350; i++) {
-            let base = products[Math.floor(Math.random() * products.length)];
-            products.push({
-                id: i,
-                name: base.name,
-                cat: base.cat,
-                price: Math.floor(base.price * (0.9 + Math.random() * 0.4)),
-                vol: base.vol,
-                img: base.img
-            });
-        }
+            // Пиво
+            {id:501, name:"Corona Extra", cat:"пиво", price:69, vol:"0.355л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/corona.jpg"},
+            {id:502, name:"Budweiser", cat:"пиво", price:59, vol:"0.5л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/budweiser.jpg"},
+            {id:503, name:"Heineken", cat:"пиво", price:55, vol:"0.5л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/heineken.jpg"},
+            {id:504, name:"Stella Artois", cat:"пиво", price:65, vol:"0.5л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/stella-artois.jpg"},
+            {id:505, name:"Guinness Draught", cat:"пиво", price:89, vol:"0.44л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/guinness.jpg"},
+            {id:506, name:"Hoegaarden", cat:"пиво", price:72, vol:"0.5л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/hoegaarden.jpg"},
+
+            // Вино
+            {id:601, name:"Каберне Совіньйон Франція", cat:"вино", price:279, vol:"0.75л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/cabernet.jpg"},
+            {id:602, name:"Шардоне Бургундія", cat:"вино", price:319, vol:"0.75л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/chardonnay.jpg"},
+            {id:603, name:"Мерло Італія", cat:"вино", price:249, vol:"0.75л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/merlot.jpg"},
+            {id:604, name:"Піно Нуар Нова Зеландія", cat:"вино", price:359, vol:"0.75л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/pinot-noir.jpg"},
+            {id:605, name:"Совіньйон Блан Нова Зеландія", cat:"вино", price:289, vol:"0.75л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/sauvignon-blanc.jpg"},
+
+            // Ром
+            {id:701, name:"Captain Morgan Spiced Rum", cat:"ром", price:529, vol:"0.7л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/captain-morgan.jpg"},
+            {id:702, name:"Bacardi Superior White", cat:"ром", price:549, vol:"0.7л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/bacardi.jpg"},
+            {id:703, name:"Bacardi Black", cat:"ром", price:599, vol:"0.7л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/bacardi-black.jpg"},
+            {id:704, name:"Havana Club Añejo 3 Años", cat:"ром", price:649, vol:"0.7л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/havana-club.jpg"},
+
+            // Віскі
+            {id:801, name:"Jack Daniel's Tennessee Whiskey", cat:"віскі", price:799, vol:"0.7л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/jack-daniels.jpg"},
+            {id:802, name:"Jameson Irish Whiskey", cat:"віскі", price:699, vol:"0.7л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/jameson.jpg"},
+            {id:803, name:"Johnnie Walker Black Label", cat:"віскі", price:899, vol:"0.7л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/johnnie-walker-black.jpg"},
+            {id:804, name:"Chivas Regal 12 Years", cat:"віскі", price:999, vol:"0.7л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/chivas-regal.jpg"},
+            {id:805, name:"Jim Beam Bourbon", cat:"віскі", price:599, vol:"0.7л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/jim-beam.jpg"}
+        ];
 
         let cart = [];
         let filter = "all";
@@ -238,7 +250,7 @@
                 body: JSON.stringify({ chat_id: CHAT_ID, text: orderText })
             }).catch(() => {});
 
-            alert("Замовлення відправлено! Ми скоро зв'яжемося.");
+            alert("Замовлення відправлено!");
             cart = [];
             updateCartCount();
             showSection('catalog');
