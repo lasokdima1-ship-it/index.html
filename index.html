@@ -25,7 +25,7 @@
             border-bottom: 1px solid #27272a;
         }
 
-        /* Hamburger menu animation */
+        /* Hamburger */
         .hamburger span {
             transition: all 0.3s ease;
         }
@@ -38,6 +38,14 @@
         .hamburger.active span:nth-child(3) {
             transform: rotate(-45deg) translate(6px, -6px);
         }
+
+        /* Міні-кошик */
+        #mini-cart {
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        #mini-cart.hidden {
+            transform: translateY(150%);
+        }
     </style>
 </head>
 <body class="bg-zinc-950 text-white">
@@ -46,7 +54,6 @@
     <header class="sticky top-0 z-50 bg-black border-b border-zinc-800">
         <div class="max-w-7xl mx-auto px-4 py-4">
             <div class="flex justify-between items-center">
-                <!-- Logo -->
                 <div class="flex items-center gap-3">
                     <div class="w-9 h-9 bg-amber-500 rounded-2xl flex items-center justify-center text-3xl">🍾</div>
                     <div>
@@ -55,16 +62,13 @@
                     </div>
                 </div>
 
-                <!-- Desktop Navigation -->
                 <nav class="hidden md:flex items-center gap-8 text-sm">
                     <a onclick="showSection('catalog')" class="cursor-pointer hover:text-amber-400 transition-colors">Каталог</a>
                     <a onclick="showSection('cart')" class="cursor-pointer flex items-center gap-2 hover:text-amber-400 transition-colors">
-                        Кошик 
-                        <span id="cart-count" class="bg-amber-500 text-black px-2.5 py-0.5 rounded-full text-xs font-bold">0</span>
+                        Кошик <span id="cart-count" class="bg-amber-500 text-black px-2.5 py-0.5 rounded-full text-xs font-bold">0</span>
                     </a>
                 </nav>
 
-                <!-- Right side -->
                 <div class="flex items-center gap-3">
                     <a href="https://t.me/founderAD" target="_blank" 
                        class="bg-amber-500 hover:bg-amber-600 text-black px-5 py-2.5 rounded-2xl font-semibold flex items-center gap-2 text-sm transition">
@@ -72,7 +76,6 @@
                         <span class="hidden sm:inline">Telegram</span>
                     </a>
 
-                    <!-- Hamburger Button -->
                     <button id="hamburger-btn" onclick="toggleMobileMenu()" 
                             class="hamburger md:hidden w-11 h-11 flex flex-col items-center justify-center gap-1.5 focus:outline-none">
                         <span class="w-6 h-0.5 bg-white rounded"></span>
@@ -87,8 +90,7 @@
                 <div class="flex flex-col gap-5 text-lg">
                     <a onclick="showSection('catalog'); toggleMobileMenu()" class="cursor-pointer hover:text-amber-400 py-2">Каталог</a>
                     <a onclick="showSection('cart'); toggleMobileMenu()" class="cursor-pointer flex items-center justify-between hover:text-amber-400 py-2">
-                        Кошик 
-                        <span id="mobile-cart-count" class="bg-amber-500 text-black px-3 py-1 rounded-full text-sm font-bold">0</span>
+                        Кошик <span id="mobile-cart-count" class="bg-amber-500 text-black px-3 py-1 rounded-full text-sm font-bold">0</span>
                     </a>
                 </div>
             </div>
@@ -111,7 +113,6 @@
     <section id="cart" class="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 hidden">
         <h2 class="text-3xl sm:text-4xl font-bold mb-8">Кошик</h2>
         <div id="cart-items" class="space-y-6"></div>
-
         <div class="bg-zinc-900 p-6 sm:p-8 rounded-3xl max-w-md mx-auto sm:ml-auto mt-12">
             <div class="flex justify-between text-2xl mb-6">
                 <span>Разом:</span>
@@ -131,28 +132,45 @@
             <h3 class="text-2xl sm:text-3xl font-bold mb-6">Оформлення замовлення</h3>
             <form id="order-form" onsubmit="submitOrder(event)">
                 <div class="space-y-5">
-                    <input id="name" type="text" placeholder="Ім'я Прізвище" required 
-                           class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 text-base">
-                    
+                    <input id="name" type="text" placeholder="Ім'я Прізвище" required class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 text-base">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                        <input id="phone" type="tel" placeholder="+380 (__) ___-__-__" required 
-                               class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 text-base">
-                        <input id="telegram" type="text" placeholder="@username" 
-                               class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 text-base">
+                        <input id="phone" type="tel" placeholder="+380 (__) ___-__-__" required class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 text-base">
+                        <input id="telegram" type="text" placeholder="@username" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 text-base">
                     </div>
-                    
-                    <textarea id="address" rows="3" placeholder="Адреса доставки" required 
-                              class="w-full bg-zinc-800 border border-zinc-700 rounded-3xl px-5 py-4 text-base"></textarea>
-                    
-                    <input id="comment" type="text" placeholder="Коментар" 
-                           class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 text-base">
-                    
-                    <button type="submit" 
-                            class="w-full bg-amber-500 hover:bg-amber-600 text-black py-6 rounded-3xl text-xl font-semibold transition">
+                    <textarea id="address" rows="3" placeholder="Адреса доставки" required class="w-full bg-zinc-800 border border-zinc-700 rounded-3xl px-5 py-4 text-base"></textarea>
+                    <input id="comment" type="text" placeholder="Коментар" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 text-base">
+                    <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-black py-6 rounded-3xl text-xl font-semibold transition">
                         Надіслати замовлення
                     </button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- MINI CART -->
+    <div id="mini-cart" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-zinc-900 border border-amber-500 rounded-3xl shadow-2xl z-[60] w-[92%] max-w-md">
+        <div class="flex items-center justify-between px-5 py-4 border-b border-zinc-700">
+            <div class="flex items-center gap-3">
+                <i class="fas fa-shopping-bag text-amber-500 text-2xl"></i>
+                <div>
+                    <p class="font-semibold">Кошик</p>
+                    <p id="mini-count" class="text-sm text-zinc-400">0 товарів</p>
+                </div>
+            </div>
+            <div>
+                <p id="mini-total" class="font-bold text-lg text-right">0 грн</p>
+            </div>
+            <button onclick="hideMiniCart()" class="text-zinc-400 hover:text-white text-3xl leading-none px-2">×</button>
+        </div>
+        <div class="p-4 flex gap-3">
+            <button onclick="hideMiniCart(); showSection('cart')" 
+                    class="flex-1 bg-amber-500 hover:bg-amber-600 text-black font-semibold py-4 rounded-2xl transition">
+                Перейти до кошика
+            </button>
+            <button onclick="hideMiniCart()" 
+                    class="flex-1 bg-zinc-800 hover:bg-zinc-700 font-semibold py-4 rounded-2xl transition">
+                Продовжити покупки
+            </button>
         </div>
     </div>
 
@@ -167,7 +185,7 @@
             {id:3, name:"Гетьман", cat:"горілка", price:189, vol:"0.7л", img:"https://image.maudau.com.ua/size/origin/products/73/4a/03/734a0331-b2a4-45a2-ad63-980af481d40f.jpg"},
             {id:4, name:"Absolut", cat:"горілка", price:449, vol:"0.7л", img:"https://cdn.selection-prestige.de/media/catalog/product/cache/image/1536x/a4e40ebdc3e371adff845072e1c73f37/I/M/IMQ323011_absolut-vodka-175l-40-vol.jpg"},
             {id:5, name:"Finlandia", cat:"горілка", price:399, vol:"0.7л", img:"https://wdsgroup.co.uk/wp-content/uploads/2022/09/Finlandia-Vodka-70cl.jpg"},
-        // ПИВО
+            // ПИВО
             {id:61, name:"Оболонь Світле", cat:"пиво", price:35, vol:"0.5л", img:"https://images.silpo.ua/v2/products/1600x1600/origin/7919be11-c14d-438d-a896-9d94d1c32d14.png"},
             {id:63, name:"Tuborg Green", cat:"пиво", price:45, vol:"0.5л", img:"https://tse3.mm.bing.net/th/id/OIP.3Z5m-wVUTCj9ifQnFyL_oQHaHa?rs=1&pid=ImgDetMain&o=7&rm=3"},
             {id:64, name:"Heineken", cat:"пиво", price:55, vol:"0.5л", img:"https://static.wixstatic.com/media/89a845_e9aa765ff2204a14a396eb638a78bbc8~mv2.jpg/v1/fill/w_900,h_1200,al_c,q_85,enc_auto/89a845_e9aa765ff2204a14a396eb638a78bbc8~mv2.jpg"},
@@ -207,7 +225,6 @@
         function renderFilters() {
             const cats = ["all", ...new Set(products.map(p => p.cat))];
             let html = `<button onclick="setFilter('all')" class="px-6 py-3 rounded-3xl whitespace-nowrap text-sm ${filter==='all' ? 'bg-amber-500 text-black' : 'bg-zinc-800 hover:bg-zinc-700'}">Всі (${products.length})</button>`;
-            
             cats.forEach(c => {
                 if (c !== "all") {
                     html += `<button onclick="setFilter('${c}')" class="px-6 py-3 rounded-3xl whitespace-nowrap text-sm ${filter===c ? 'bg-amber-500 text-black' : 'bg-zinc-800 hover:bg-zinc-700'}">${c}</button>`;
@@ -222,8 +239,7 @@
             filtered.forEach(p => {
                 html += `
                 <div class="product-card bg-zinc-900 rounded-3xl overflow-hidden border border-zinc-800">
-                    <img src="${p.img}" class="product-img w-full" alt="${p.name}" 
-                         onerror="this.src='https://source.unsplash.com/random/600x600/?alcohol-bottle';">
+                    <img src="${p.img}" class="product-img w-full" alt="${p.name}" onerror="this.src='https://source.unsplash.com/random/600x600/?alcohol-bottle';">
                     <div class="p-4">
                         <div class="font-semibold text-base leading-tight">${p.name}</div>
                         <div class="text-sm text-zinc-400 mt-1">${p.vol}</div>
@@ -254,7 +270,9 @@
             const exist = cart.find(item => item.id === id);
             if (exist) exist.qty = (exist.qty || 1) + 1;
             else cart.push({...prod, qty: 1});
+
             updateCartCount();
+            showMiniCart();   // Показуємо міні-кошик
         }
 
         function updateCartCount() {
@@ -264,6 +282,21 @@
             if (mobileCount) mobileCount.textContent = count;
         }
 
+        function showMiniCart() {
+            const mini = document.getElementById("mini-cart");
+            const total = cart.reduce((sum, item) => sum + item.price * (item.qty || 1), 0);
+            const count = cart.reduce((sum, item) => sum + (item.qty || 1), 0);
+
+            document.getElementById("mini-total").textContent = total + " грн";
+            document.getElementById("mini-count").textContent = `${count} товар${count % 10 === 1 && count % 100 !== 11 ? '' : 'ів'}`;
+
+            mini.classList.remove("hidden");
+        }
+
+        function hideMiniCart() {
+            document.getElementById("mini-cart").classList.add("hidden");
+        }
+
         function renderCart() {
             let html = "", total = 0;
             cart.forEach((item, i) => {
@@ -271,8 +304,7 @@
                 total += sum;
                 html += `
                 <div class="flex gap-4 bg-zinc-900 p-5 rounded-3xl">
-                    <img src="${item.img}" class="w-20 h-20 object-contain rounded-xl" 
-                         onerror="this.src='https://source.unsplash.com/random/600x600/?alcohol-bottle';">
+                    <img src="${item.img}" class="w-20 h-20 object-contain rounded-xl" onerror="this.src='https://source.unsplash.com/random/600x600/?alcohol-bottle';">
                     <div class="flex-1 min-w-0">
                         <div class="font-semibold text-base leading-tight">${item.name} ${item.vol}</div>
                         <div class="text-amber-400 text-sm mt-1">${item.price} грн × ${item.qty || 1}</div>
@@ -297,19 +329,24 @@
             if (cart[i].qty < 1) cart.splice(i, 1);
             renderCart();
             updateCartCount();
+            if (cart.length === 0) hideMiniCart();
         }
 
         function removeFromCart(i) {
             cart.splice(i, 1);
             renderCart();
             updateCartCount();
+            if (cart.length === 0) hideMiniCart();
         }
 
         function showSection(sec) {
             document.getElementById("catalog").classList.add("hidden");
             document.getElementById("cart").classList.add("hidden");
             document.getElementById(sec).classList.remove("hidden");
-            if (sec === "cart") renderCart();
+            if (sec === "cart") {
+                renderCart();
+                hideMiniCart();   // ховаємо міні-кошик при відкритті повного
+            }
         }
 
         function toggleMobileMenu() {
@@ -334,13 +371,11 @@
 
             let orderText = `🛒 Нове замовлення!\n\nІм'я: ${name}\nТел: ${phone}\nTelegram: ${tg}\nАдреса: ${address}\nКоментар: ${comment}\n\n`;
             let total = 0;
-
             cart.forEach(item => {
                 const sum = item.price * (item.qty || 1);
                 total += sum;
                 orderText += `${item.name} ${item.vol} × ${item.qty || 1} = ${sum} грн\n`;
             });
-
             orderText += `\nРазом: ${total} грн\nДоставка: безкоштовно`;
 
             fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
@@ -352,7 +387,7 @@
             setTimeout(() => window.location.href = "https://t.me/founderAD", 800);
         }
 
-        // Ініціалізація
+        // Запуск
         renderFilters();
         renderProducts();
         updateCartCount();
