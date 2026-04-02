@@ -1,1 +1,299 @@
+```html
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>АлкоДоставка • Україна</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body { font-family: system-ui, -apple-system, sans-serif; }
+        .product-card { transition: all 0.3s; }
+        .product-card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1); }
+    </style>
+</head>
+<body class="bg-zinc-950 text-white">
+    <header class="sticky top-0 z-50 bg-black border-b border-zinc-800">
+        <div class="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-amber-500 rounded-2xl flex items-center justify-center text-3xl">🍾</div>
+                <div>
+                    <h1 class="text-3xl font-bold">АлкоДоставка</h1>
+                    <p class="text-amber-400 text-sm">Доставка по Україні • Безкоштовно від 1000 грн</p>
+                </div>
+            </div>
+            <nav class="flex items-center gap-8">
+                <a onclick="showSection('catalog')" class="cursor-pointer hover:text-amber-400">Каталог</a>
+                <a onclick="showSection('cart')" class="cursor-pointer flex items-center gap-2 hover:text-amber-400">
+                    Кошик <span id="cart-count" class="bg-amber-500 text-black px-2 py-0.5 rounded-full text-xs font-bold">0</span>
+                </a>
+                <a href="https://t.me/founderAD" target="_blank" class="bg-amber-500 text-black px-6 py-3 rounded-2xl font-semibold flex items-center gap-2">
+                    <i class="fab fa-telegram"></i> @founderAD
+                </a>
+            </nav>
+        </div>
+    </header>
 
+    <div class="bg-gradient-to-br from-zinc-900 to-black py-16 text-center">
+        <h2 class="text-5xl font-bold tracking-tight">Популярний алкоголь по цінах постачальників</h2>
+        <p class="mt-4 text-2xl text-zinc-400">312 позицій • Доставка по всій Україні • Сповіщення в Telegram</p>
+    </div>
+
+    <!-- Каталог -->
+    <section id="catalog" class="max-w-7xl mx-auto px-6 py-12">
+        <div class="flex flex-wrap gap-3 mb-8" id="filters">
+            <!-- JS -->
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6" id="products"></div>
+    </section>
+
+    <!-- Кошик -->
+    <section id="cart" class="max-w-7xl mx-auto px-6 py-12 hidden">
+        <h2 class="text-4xl font-bold mb-8">Кошик</h2>
+        <div id="cart-items" class="space-y-6"></div>
+        <div class="bg-zinc-900 p-8 rounded-3xl max-w-md ml-auto mt-10">
+            <div class="flex justify-between text-2xl mb-6">
+                <span>Разом:</span>
+                <span id="total" class="font-semibold">0 грн</span>
+            </div>
+            <button onclick="openOrderModal()" class="w-full bg-amber-500 text-black py-6 rounded-3xl text-2xl font-semibold">Оформити замовлення</button>
+            <p class="text-center text-sm text-emerald-400 mt-4">Доставка безкоштовна від 1000 грн</p>
+        </div>
+    </section>
+
+    <!-- Модальне вікно замовлення -->
+    <div id="order-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+        <div class="bg-zinc-900 rounded-3xl p-8 max-w-lg w-full mx-4">
+            <h3 class="text-3xl font-bold mb-6">Оформлення замовлення</h3>
+            <form id="order-form" onsubmit="submitOrder(event)">
+                <div class="space-y-5">
+                    <input id="name" type="text" placeholder="Ім'я Прізвище" required class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4">
+                    <div class="grid grid-cols-2 gap-5">
+                        <input id="phone" type="tel" placeholder="+380 (__) ___-__-__" required class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4">
+                        <input id="telegram" type="text" placeholder="@username" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4">
+                    </div>
+                    <textarea id="address" rows="3" placeholder="Адреса доставки (місто, вулиця, будинок, квартира)" required class="w-full bg-zinc-800 border border-zinc-700 rounded-3xl px-5 py-4"></textarea>
+                    <input id="comment" type="text" placeholder="Коментар" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4">
+                    <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-black py-6 rounded-3xl text-2xl font-semibold">Надіслати замовлення</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const BOT_TOKEN = "8241760623:AAGfnf7OqvVPcnkW_EM5r3zgXN1blNZQ4Ig";
+        let CHAT_ID = "8241760623";
+
+        const products = [
+            // ГОРІЛКА (1-60)
+            {id:1,name:"Nemiroff Делікат",cat:"горілка",price:199,vol:"0.7л"},{id:2,name:"Хортиця Класична",cat:"горілка",price:169,vol:"0.5л"},{id:3,name:"Гетьман",cat:"горілка",price:189,vol:"0.7л"},{id:4,name:"Absolut",cat:"горілка",price:449,vol:"0.7л"},{id:5,name:"Finlandia",cat:"горілка",price:399,vol:"0.7л"},
+            {id:6,name:"Nemiroff Особлива",cat:"горілка",price:179,vol:"0.5л"},{id:7,name:"Русский Стандарт",cat:"горілка",price:289,vol:"0.7л"},{id:8,name:"Смирнофф Ред",cat:"горілка",price:249,vol:"0.5л"},{id:9,name:"Зеленая Марка",cat:"горілка",price:219,vol:"0.7л"},{id:10,name:"Белуга Нобл",cat:"горілка",price:899,vol:"0.75л"},
+            {id:11,name:"Гжелка",cat:"горілка",price:159,vol:"0.5л"},{id:12,name:"Кристал",cat:"горілка",price:149,vol:"0.5л"},{id:13,name:"Медведь",cat:"горілка",price:139,vol:"0.5л"},{id:14,name:"Пшеничная",cat:"горілка",price:179,vol:"0.7л"},{id:15,name:"Столичная",cat:"горілка",price:259,vol:"0.7л"},
+            {id:16,name:"Nemiroff Premium",cat:"горілка",price:229,vol:"0.7л"},{id:17,name:"Хортиця Пшенична",cat:"горілка",price:189,vol:"0.7л"},{id:18,name:"Absolut Lime",cat:"горілка",price:479,vol:"0.7л"},{id:19,name:"Finlandia Mango",cat:"горілка",price:429,vol:"0.7л"},{id:20,name:"Smirnoff Green Apple",cat:"горілка",price:269,vol:"0.5л"},
+            {id:21,name:"Nemiroff Lex",cat:"горілка",price:249,vol:"0.7л"},{id:22,name:"Гетьман Лідер",cat:"горілка",price:199,vol:"0.7л"},{id:23,name:"Русский Стандарт Gold",cat:"горілка",price:349,vol:"0.7л"},{id:24,name:"Белуга Gold",cat:"горілка",price:1499,vol:"0.75л"},{id:25,name:"Кристалл Премиум",cat:"горілка",price:169,vol:"0.5л"},
+            {id:26,name:"Хортиця Срібна",cat:"горілка",price:179,vol:"0.5л"},{id:27,name:"Nemiroff Black",cat:"горілка",price:219,vol:"0.7л"},{id:28,name:"Absolut Raspberri",cat:"горілка",price:459,vol:"0.7л"},{id:29,name:"Finlandia Blackcurrant",cat:"горілка",price:429,vol:"0.7л"},{id:30,name:"Smirnoff Ice",cat:"горілка",price:99,vol:"0.33л"},
+            {id:31,name:"Гетьман Імперія",cat:"горілка",price:229,vol:"0.7л"},{id:32,name:"Русский Стандарт Platinum",cat:"горілка",price:399,vol:"0.7л"},{id:33,name:"Белуга Transatlantic",cat:"горілка",price:1299,vol:"0.75л"},{id:34,name:"Nemiroff Delikat Soft",cat:"горілка",price:209,vol:"0.7л"},{id:35,name:"Хортиця М'яка",cat:"горілка",price:159,vol:"0.5л"},
+            {id:36,name:"Кристал Лідер",cat:"горілка",price:149,vol:"0.5л"},{id:37,name:"Пшеничная Классика",cat:"горілка",price:169,vol:"0.7л"},{id:38,name:"Столичная Элит",cat:"горілка",price:299,vol:"0.7л"},{id:39,name:"Nemiroff Honey Pepper",cat:"горілка",price:239,vol:"0.7л"},{id:40,name:"Absolut Citron",cat:"горілка",price:449,vol:"0.7л"},
+            {id:41,name:"Finlandia Vodka",cat:"горілка",price:399,vol:"0.7л"},{id:42,name:"Smirnoff No.21",cat:"горілка",price:259,vol:"0.7л"},{id:43,name:"Гетьман Класична",cat:"горілка",price:179,vol:"0.7л"},{id:44,name:"Русский Стандарт Original",cat:"горілка",price:289,vol:"0.7л"},{id:45,name:"Белуга Celebration",cat:"горілка",price:999,vol:"0.75л"},
+            {id:46,name:"Nemiroff Wild",cat:"горілка",price:219,vol:"0.7л"},{id:47,name:"Хортиця Золота",cat:"горілка",price:199,vol:"0.7л"},{id:48,name:"Absolut Kurant",cat:"горілка",price:449,vol:"0.7л"},{id:49,name:"Finlandia Lime",cat:"горілка",price:429,vol:"0.7л"},{id:50,name:"Smirnoff Red Label",cat:"горілка",price:249,vol:"0.5л"},
+            {id:51,name:"Nemiroff Cranberry",cat:"горілка",price:229,vol:"0.7л"},{id:52,name:"Гетьман Престиж",cat:"горілка",price:209,vol:"0.7л"},{id:53,name:"Русский Стандарт Imperia",cat:"горілка",price:449,vol:"0.7л"},{id:54,name:"Белуга Magnum",cat:"горілка",price:2499,vol:"1.75л"},{id:55,name:"Кристалл Классик",cat:"горілка",price:139,vol:"0.5л"},
+            {id:56,name:"Пшеничная Премиум",cat:"горілка",price:189,vol:"0.7л"},{id:57,name:"Столичная Gold",cat:"горілка",price:329,vol:"0.7л"},{id:58,name:"Nemiroff Spicy",cat:"горілка",price:239,vol:"0.7л"},{id:59,name:"Absolut Mandarin",cat:"горілка",price:459,vol:"0.7л"},{id:60,name:"Finlandia Grapefruit",cat:"горілка",price:429,vol:"0.7л"},
+
+            // ПИВО (61-120)
+            {id:61,name:"Оболонь Світле",cat:"пиво",price:35,vol:"0.5л"},{id:62,name:"Чернігівське Преміум",cat:"пиво",price:39,vol:"0.5л"},{id:63,name:"Tuborg Green",cat:"пиво",price:45,vol:"0.5л"},{id:64,name:"Heineken",cat:"пиво",price:55,vol:"0.5л"},{id:65,name:"Львівське 1715",cat:"пиво",price:42,vol:"0.5л"},
+            {id:66,name:"Оболонь Міцне",cat:"пиво",price:38,vol:"0.5л"},{id:67,name:"Чернігівське Біле",cat:"пиво",price:41,vol:"0.5л"},{id:68,name:"Tuborg Black",cat:"пиво",price:48,vol:"0.5л"},{id:69,name:"Heineken Silver",cat:"пиво",price:59,vol:"0.5л"},{id:70,name:"Львівське Пшеничне",cat:"пиво",price:44,vol:"0.5л"},
+            {id:71,name:"Балтика №3",cat:"пиво",price:45,vol:"0.5л"},{id:72,name:"Балтика №7",cat:"пиво",price:49,vol:"0.5л"},{id:73,name:"Corona Extra",cat:"пиво",price:69,vol:"0.355л"},{id:74,name:"Guinness",cat:"пиво",price:89,vol:"0.44л"},{id:75,name:"Miller",cat:"пиво",price:55,vol:"0.5л"},
+            {id:76,name:"Оболонь Престиж",cat:"пиво",price:37,vol:"0.5л"},{id:77,name:"Чернігівське Міцне",cat:"пиво",price:39,vol:"0.5л"},{id:78,name:"Tuborg Gold",cat:"пиво",price:47,vol:"0.5л"},{id:79,name:"Heineken 0.0",cat:"пиво",price:55,vol:"0.5л"},{id:80,name:"Львівське 1715 Лагер",cat:"пиво",price:42,vol:"0.5л"},
+            {id:81,name:"Оболонь Безалкогольне",cat:"пиво",price:33,vol:"0.5л"},{id:82,name:"Чернігівське Світле",cat:"пиво",price:35,vol:"0.5л"},{id:83,name:"Tuborg Classic",cat:"пиво",price:45,vol:"0.5л"},{id:84,name:"Heineken Dark",cat:"пиво",price:59,vol:"0.5л"},{id:85,name:"Львівське Міцне",cat:"пиво",price:44,vol:"0.5л"},
+            {id:86,name:"Балтика №9",cat:"пиво",price:49,vol:"0.5л"},{id:87,name:"Corona Extra 6pk",cat:"пиво",price:399,vol:"6x0.355л"},{id:88,name:"Guinness Draught",cat:"пиво",price:89,vol:"0.44л"},{id:89,name:"Miller Lite",cat:"пиво",price:55,vol:"0.5л"},{id:90,name:"Оболонь Premium",cat:"пиво",price:39,vol:"0.5л"},
+            {id:91,name:"Чернігівське Пшеничне",cat:"пиво",price:41,vol:"0.5л"},{id:92,name:"Tuborg Ice",cat:"пиво",price:48,vol:"0.5л"},{id:93,name:"Heineken 0.0 Apple",cat:"пиво",price:59,vol:"0.5л"},{id:94,name:"Львівське 1715 Dark",cat:"пиво",price:44,vol:"0.5л"},{id:95,name:"Балтика №6",cat:"пиво",price:45,vol:"0.5л"},
+            {id:96,name:"Оболонь Зелена",cat:"пиво",price:35,vol:"0.5л"},{id:97,name:"Чернігівське Лагер",cat:"пиво",price:37,vol:"0.5л"},{id:98,name:"Tuborg Red",cat:"пиво",price:45,vol:"0.5л"},{id:99,name:"Heineken Light",cat:"пиво",price:55,vol:"0.5л"},{id:100,name:"Львівське 1715 Wheat",cat:"пиво",price:42,vol:"0.5л"},
+            {id:101,name:"Corona Cero",cat:"пиво",price:69,vol:"0.355л"},{id:102,name:"Guinness Nitro",cat:"пиво",price:99,vol:"0.44л"},{id:103,name:"Miller Genuine Draft",cat:"пиво",price:59,vol:"0.5л"},{id:104,name:"Оболонь Радлер",cat:"пиво",price:37,vol:"0.5л"},{id:105,name:"Чернігівське Радлер",cat:"пиво",price:39,vol:"0.5л"},
+            {id:106,name:"Tuborg Lemon",cat:"пиво",price:47,vol:"0.5л"},{id:107,name:"Heineken Silver 0.0",cat:"пиво",price:59,vol:"0.5л"},{id:108,name:"Львівське 1715 Light",cat:"пиво",price:42,vol:"0.5л"},{id:109,name:"Балтика №4",cat:"пиво",price:45,vol:"0.5л"},{id:110,name:"Оболонь Міцне 7%",cat:"пиво",price:39,vol:"0.5л"},
+            {id:111,name:"Чернігівське Міцне 8%",cat:"пиво",price:41,vol:"0.5л"},{id:112,name:"Tuborg Gold 0.0",cat:"пиво",price:45,vol:"0.5л"},{id:113,name:"Heineken Dark 0.0",cat:"пиво",price:59,vol:"0.5л"},{id:114,name:"Львівське Безалкогольне",cat:"пиво",price:39,vol:"0.5л"},{id:115,name:"Балтика №5",cat:"пиво",price:49,vol:"0.5л"},
+            {id:116,name:"Corona Familiar",cat:"пиво",price:79,vol:"0.355л"},{id:117,name:"Guinness Extra Stout",cat:"пиво",price:89,vol:"0.44л"},{id:118,name:"Miller High Life",cat:"пиво",price:55,vol:"0.5л"},{id:119,name:"Оболонь Світле 4.5%",cat:"пиво",price:35,vol:"0.5л"},{id:120,name:"Чернігівське Преміум 5%",cat:"пиво",price:39,vol:"0.5л"},
+
+            // ВИНО (121-170)
+            {id:121,name:"Каберне",cat:"вино",price:149,vol:"0.75л"},{id:122,name:"Шардоне",cat:"вино",price:139,vol:"0.75л"},{id:123,name:"Мерло",cat:"вино",price:129,vol:"0.75л"},{id:124,name:"Кіндзмараулі",cat:"вино",price:229,vol:"0.75л"},{id:125,name:"Сапераві",cat:"вино",price:159,vol:"0.75л"},
+            {id:126,name:"Піно Грі",cat:"вино",price:169,vol:"0.75л"},{id:127,name:"Совіньйон Блан",cat:"вино",price:179,vol:"0.75л"},{id:128,name:"Рислінг",cat:"вино",price:149,vol:"0.75л"},{id:129,name:"Мускат",cat:"вино",price:139,vol:"0.75л"},{id:130,name:"Піно Нуар",cat:"вино",price:199,vol:"0.75л"},
+            {id:131,name:"Chateau Mukhrani",cat:"вино",price:299,vol:"0.75л"},{id:132,name:"Teliani Valley",cat:"вино",price:189,vol:"0.75л"},{id:133,name:"Badagoni",cat:"вино",price:169,vol:"0.75л"},{id:134,name:"Каберне Совіньйон",cat:"вино",price:159,vol:"0.75л"},{id:135,name:"Шардоне Reserve",cat:"вино",price:149,vol:"0.75л"},
+            {id:136,name:"Мерло Reserve",cat:"вино",price:139,vol:"0.75л"},{id:137,name:"Кіндзмараулі Premium",cat:"вино",price:259,vol:"0.75л"},{id:138,name:"Сапераві Mukhrani",cat:"вино",price:329,vol:"0.75л"},{id:139,name:"Піно Грі Італія",cat:"вино",price:219,vol:"0.75л"},{id:140,name:"Совіньйон Блан Франція",cat:"вино",price:249,vol:"0.75л"},
+            {id:141,name:"Рислінг Німеччина",cat:"вино",price:179,vol:"0.75л"},{id:142,name:"Мускат Грузія",cat:"вино",price:149,vol:"0.75л"},{id:143,name:"Піно Нуар Чилі",cat:"вино",price:189,vol:"0.75л"},{id:144,name:"Каберне Аргентина",cat:"вино",price:169,vol:"0.75л"},{id:145,name:"Шардоне Австралія",cat:"вино",price:159,vol:"0.75л"},
+            {id:146,name:"Мерло Іспанія",cat:"вино",price:139,vol:"0.75л"},{id:147,name:"Кіндзмараулі Сухе",cat:"вино",price:199,vol:"0.75л"},{id:148,name:"Сапераві Semi-sweet",cat:"вино",price:169,vol:"0.75л"},{id:149,name:"Піно Грі Італія",cat:"вино",price:229,vol:"0.75л"},{id:150,name:"Совіньйон Блан Нова Зеландія",cat:"вино",price:259,vol:"0.75л"},
+            {id:151,name:"Рислінг Австрія",cat:"вино",price:189,vol:"0.75л"},{id:152,name:"Мускат Солодкий",cat:"вино",price:149,vol:"0.75л"},{id:153,name:"Піно Нуар Франція",cat:"вино",price:299,vol:"0.75л"},{id:154,name:"Каберне Італія",cat:"вино",price:179,vol:"0.75л"},{id:155,name:"Шардоне Чилі",cat:"вино",price:159,vol:"0.75л"},
+            {id:156,name:"Мерло Австралія",cat:"вино",price:149,vol:"0.75л"},{id:157,name:"Кіндзмараулі Classic",cat:"вино",price:219,vol:"0.75л"},{id:158,name:"Сапераві Mukhrani",cat:"вино",price:329,vol:"0.75л"},{id:159,name:"Піно Грі Німеччина",cat:"вино",price:199,vol:"0.75л"},{id:160,name:"Совіньйон Блан Італія",cat:"вино",price:229,vol:"0.75л"},
+            {id:161,name:"Рислінг Італія",cat:"вино",price:169,vol:"0.75л"},{id:162,name:"Мускат Грузія",cat:"вино",price:149,vol:"0.75л"},{id:163,name:"Піно Нуар Іспанія",cat:"вино",price:189,vol:"0.75л"},{id:164,name:"Каберне Франція",cat:"вино",price:259,vol:"0.75л"},{id:165,name:"Шардоне Італія",cat:"вино",price:169,vol:"0.75л"},
+            {id:166,name:"Мерло Чилі",cat:"вино",price:139,vol:"0.75л"},{id:167,name:"Кіндзмараулі Teliani",cat:"вино",price:229,vol:"0.75л"},{id:168,name:"Сапераві Badagoni",cat:"вино",price:199,vol:"0.75л"},{id:169,name:"Піно Грі Австралія",cat:"вино",price:219,vol:"0.75л"},{id:170,name:"Совіньйон Блан Чилі",cat:"вино",price:179,vol:"0.75л"},
+
+            // ІГРИСТЕ (171-200)
+            {id:171,name:"Ігристе вино Біле",cat:"ігристе",price:189,vol:"0.75л"},{id:172,name:"Просекко",cat:"ігристе",price:399,vol:"0.75л"},{id:173,name:"Ігристе Рожеве",cat:"ігристе",price:199,vol:"0.75л"},{id:174,name:"Martini Asti",cat:"ігристе",price:449,vol:"0.75л"},{id:175,name:"Moet & Chandon",cat:"ігристе",price:1599,vol:"0.75л"},
+            {id:176,name:"Абрау-Дюрсо",cat:"ігристе",price:299,vol:"0.75л"},{id:177,name:"Ігристе Сухе",cat:"ігристе",price:179,vol:"0.75л"},{id:178,name:"Просекко Extra Dry",cat:"ігристе",price:429,vol:"0.75л"},{id:179,name:"Ігристе Біле Солодке",cat:"ігристе",price:189,vol:"0.75л"},{id:180,name:"Martini Prosecco",cat:"ігристе",price:399,vol:"0.75л"},
+            {id:181,name:"Moet Imperial",cat:"ігристе",price:1699,vol:"0.75л"},{id:182,name:"Абрау-Дюрсо Premium",cat:"ігристе",price:349,vol:"0.75л"},{id:183,name:"Ігристе Рожеве Сухе",cat:"ігристе",price:209,vol:"0.75л"},{id:184,name:"Просекко DOC",cat:"ігристе",price:459,vol:"0.75л"},{id:185,name:"Martini Rose",cat:"ігристе",price:449,vol:"0.75л"},
+            {id:186,name:"Moet Rose",cat:"ігристе",price:1899,vol:"0.75л"},{id:187,name:"Абрау-Дюрсо Класичне",cat:"ігристе",price:299,vol:"0.75л"},{id:188,name:"Ігристе Біле Брют",cat:"ігристе",price:199,vol:"0.75л"},{id:189,name:"Просекко Treviso",cat:"ігристе",price:399,vol:"0.75л"},{id:190,name:"Martini Asti Spumante",cat:"ігристе",price:429,vol:"0.75л"},
+            {id:191,name:"Moet & Chandon Brut",cat:"ігристе",price:1599,vol:"0.75л"},{id:192,name:"Абрау-Дюрсо Золоте",cat:"ігристе",price:319,vol:"0.75л"},{id:193,name:"Ігристе Рожеве Брют",cat:"ігристе",price:219,vol:"0.75л"},{id:194,name:"Просекко Rose",cat:"ігристе",price:429,vol:"0.75л"},{id:195,name:"Martini Brut",cat:"ігристе",price:399,vol:"0.75л"},
+            {id:196,name:"Moet Imperial Rose",cat:"ігристе",price:1799,vol:"0.75л"},{id:197,name:"Абрау-Дюрсо Ice",cat:"ігристе",price:349,vol:"0.75л"},{id:198,name:"Ігристе Біле Сухе",cat:"ігристе",price:189,vol:"0.75л"},{id:199,name:"Просекко DOCG",cat:"ігристе",price:459,vol:"0.75л"},{id:200,name:"Martini Extra Dry",cat:"ігристе",price:399,vol:"0.75л"},
+
+            // ВІСКІ, БРЕНДІ, ЛІКЕРИ, РОМ (201-312)
+            {id:201,name:"Jameson",cat:"віскі",price:699,vol:"0.7л"},{id:202,name:"Jack Daniel's",cat:"віскі",price:799,vol:"0.7л"},{id:203,name:"Chivas Regal 12",cat:"віскі",price:999,vol:"0.7л"},{id:204,name:"Hankey Bannister",cat:"віскі",price:449,vol:"1л"},{id:205,name:"Jim Beam",cat:"віскі",price:599,vol:"0.7л"},
+            {id:206,name:"Hennessy VS",cat:"бренді",price:1199,vol:"0.5л"},{id:207,name:"Martell VS",cat:"бренді",price:899,vol:"0.5л"},{id:208,name:"Remy Martin VSOP",cat:"бренді",price:1499,vol:"0.7л"},{id:209,name:"Jagermeister",cat:"лікер",price:599,vol:"0.7л"},{id:210,name:"Baileys",cat:"лікер",price:449,vol:"0.7л"},
+            {id:211,name:"Captain Morgan",cat:"ром",price:499,vol:"0.7л"},{id:212,name:"Bacardi Superior",cat:"ром",price:549,vol:"0.7л"},{id:213,name:"Johnnie Walker Red",cat:"віскі",price:599,vol:"0.7л"},{id:214,name:"Chivas Regal 18",cat:"віскі",price:1499,vol:"0.7л"},{id:215,name:"Jack Daniel's Honey",cat:"віскі",price:799,vol:"0.7л"},
+            {id:216,name:"Hennessy VSOP",cat:"бренді",price:1599,vol:"0.5л"},{id:217,name:"Martell XO",cat:"бренді",price:2499,vol:"0.7л"},{id:218,name:"Campari",cat:"лікер",price:499,vol:"0.7л"},{id:219,name:"Baileys Chocolate",cat:"лікер",price:499,vol:"0.7л"},{id:220,name:"Captain Morgan Spiced",cat:"ром",price:529,vol:"0.7л"},
+            {id:221,name:"Bacardi Black",cat:"ром",price:599,vol:"0.7л"},{id:222,name:"Jameson Black Barrel",cat:"віскі",price:899,vol:"0.7л"},{id:223,name:"Jack Daniel's Tennessee",cat:"віскі",price:799,vol:"0.7л"},{id:224,name:"Chivas Regal 25",cat:"віскі",price:2999,vol:"0.7л"},{id:225,name:"Johnnie Walker Black",cat:"віскі",price:899,vol:"0.7л"},
+            {id:226,name:"Hennessy XO",cat:"бренді",price:2499,vol:"0.7л"},{id:227,name:"Martell VSOP",cat:"бренді",price:1299,vol:"0.7л"},{id:228,name:"Jagermeister Cold Brew",cat:"лікер",price:649,vol:"0.7л"},{id:229,name:"Baileys Vanilla",cat:"лікер",price:449,vol:"0.7л"},{id:230,name:"Captain Morgan White",cat:"ром",price:499,vol:"0.7л"},
+            {id:231,name:"Bacardi Gold",cat:"ром",price:549,vol:"0.7л"},{id:232,name:"Jameson Irish",cat:"віскі",price:699,vol:"0.7л"},{id:233,name:"Jack Daniel's Gentleman",cat:"віскі",price:899,vol:"0.7л"},{id:234,name:"Chivas Regal Extra",cat:"віскі",price:1199,vol:"0.7л"},{id:235,name:"Hankey Bannister 12",cat:"віскі",price:599,vol:"0.7л"},
+            {id:236,name:"Hennessy Paradis",cat:"бренді",price:4999,vol:"0.7л"},{id:237,name:"Martell Cordon Bleu",cat:"бренді",price:2999,vol:"0.7л"},{id:238,name:"Campari Orange",cat:"лікер",price:499,vol:"0.7л"},{id:239,name:"Baileys Salted Caramel",cat:"лікер",price:499,vol:"0.7л"},{id:240,name:"Captain Morgan Dark",cat:"ром",price:529,vol:"0.7л"},
+            {id:241,name:"Bacardi 151",cat:"ром",price:899,vol:"0.7л"},{id:242,name:"Jameson Caskmates",cat:"віскі",price:799,vol:"0.7л"},{id:243,name:"Jack Daniel's Sinatra",cat:"віскі",price:1499,vol:"0.7л"},{id:244,name:"Johnnie Walker Gold",cat:"віскі",price:1299,vol:"0.7л"},{id:245,name:"Chivas Regal 12 Twin",cat:"віскі",price:1099,vol:"1.75л"},
+            {id:246,name:"Hennessy VS Limited",cat:"бренді",price:1299,vol:"0.5л"},{id:247,name:"Martell VSOP Gift",cat:"бренді",price:1399,vol:"0.7л"},{id:248,name:"Jagermeister Herbal",cat:"лікер",price:599,vol:"0.7л"},{id:249,name:"Baileys Almande",cat:"лікер",price:549,vol:"0.7л"},{id:250,name:"Captain Morgan Cannon Blast",cat:"ром",price:599,vol:"0.7л"},
+            {id:251,name:"Bacardi Limon",cat:"ром",price:549,vol:"0.7л"},{id:252,name:"Jameson Stout Edition",cat:"віскі",price:899,vol:"0.7л"},{id:253,name:"Jack Daniel's Fire",cat:"віскі",price:799,vol:"0.7л"},{id:254,name:"Johnnie Walker Platinum",cat:"віскі",price:1599,vol:"0.7л"},{id:255,name:"Chivas Regal 18 Twin",cat:"віскі",price:1699,vol:"1.75л"},
+            {id:256,name:"Hennessy VSOP Limited",cat:"бренді",price:1699,vol:"0.5л"},{id:257,name:"Martell XO Gift",cat:"бренді",price:2599,vol:"0.7л"},{id:258,name:"Campari Soda",cat:"лікер",price:449,vol:"0.7л"},{id:259,name:"Baileys Espresso",cat:"лікер",price:499,vol:"0.7л"},{id:260,name:"Captain Morgan Coconut",cat:"ром",price:529,vol:"0.7л"},
+            {id:261,name:"Bacardi Raspberry",cat:"ром",price:549,vol:"0.7л"},{id:262,name:"Jameson Distiller's",cat:"віскі",price:999,vol:"0.7л"},{id:263,name:"Jack Daniel's Apple",cat:"віскі",price:799,vol:"0.7л"},{id:264,name:"Johnnie Walker Blue",cat:"віскі",price:2999,vol:"0.7л"},{id:265,name:"Chivas Regal Mizunara",cat:"віскі",price:1299,vol:"0.7л"},
+            {id:266,name:"Hennessy Paradis Extra",cat:"бренді",price:7999,vol:"0.7л"},{id:267,name:"Martell Creation",cat:"бренді",price:3499,vol:"0.7л"},{id:268,name:"Jagermeister Manifest",cat:"лікер",price:899,vol:"0.7л"},{id:269,name:"Baileys Deliciously",cat:"лікер",price:449,vol:"0.7л"},{id:270,name:"Captain Morgan Pineapple",cat:"ром",price:529,vol:"0.7л"},
+            {id:271,name:"Bacardi Oakheart",cat:"ром",price:549,vol:"0.7л"},{id:272,name:"Jameson Blender",cat:"віскі",price:899,vol:"0.7л"},{id:273,name:"Jack Daniel's Winter Jack",cat:"віскі",price:799,vol:"0.7л"},{id:274,name:"Johnnie Walker Green",cat:"віскі",price:899,vol:"0.7л"},{id:275,name:"Chivas Regal 25 Limited",cat:"віскі",price:3499,vol:"0.7л"},
+            {id:276,name:"Hennessy VSOP Gift",cat:"бренді",price:1599,vol:"0.5л"},{id:277,name:"Martell VS Gift",cat:"бренді",price:999,vol:"0.5л"},{id:278,name:"Campari Bitter",cat:"лікер",price:499,vol:"0.7л"},{id:279,name:"Baileys Irish Cream",cat:"лікер",price:449,vol:"0.7л"},{id:280,name:"Captain Morgan Original",cat:"ром",price:499,vol:"0.7л"},
+            {id:281,name:"Bacardi Mojito",cat:"ром",price:549,vol:"0.7л"},{id:282,name:"Jameson 18 Years",cat:"віскі",price:1499,vol:"0.7л"},{id:283,name:"Jack Daniel's Single Barrel",cat:"віскі",price:1299,vol:"0.7л"},{id:284,name:"Johnnie Walker Red Label Twin",cat:"віскі",price:1099,vol:"1.75л"},{id:285,name:"Chivas Regal 12 Gift",cat:"віскі",price:1099,vol:"0.7л"},
+            {id:286,name:"Hennessy XO Gift",cat:"бренді",price:2599,vol:"0.7л"},{id:287,name:"Martell VSOP Limited",cat:"бренді",price:1399,vol:"0.7л"},{id:288,name:"Jagermeister Spice",cat:"лікер",price:649,vol:"0.7л"},{id:289,name:"Baileys Red Velvet",cat:"лікер",price:499,vol:"0.7л"},{id:290,name:"Captain Morgan Cherry",cat:"ром",price:529,vol:"0.7л"},
+            {id:291,name:"Bacardi Dragonberry",cat:"ром",price:549,vol:"0.7л"},{id:292,name:"Jameson Irish Whiskey",cat:"віскі",price:699,vol:"0.7л"},{id:293,name:"Jack Daniel's Old No.7",cat:"віскі",price:799,vol:"0.7л"},{id:294,name:"Johnnie Walker Black Label Twin",cat:"віскі",price:1699,vol:"1.75л"},{id:295,name:"Chivas Regal Mizunara Gift",cat:"віскі",price:1399,vol:"0.7л"},
+            {id:296,name:"Hennessy VS Gift",cat:"бренді",price:1299,vol:"0.5л"},{id:297,name:"Martell Creation XO",cat:"бренді",price:3499,vol:"0.7л"},{id:298,name:"Campari Negroni",cat:"лікер",price:499,vol:"0.7л"},{id:299,name:"Baileys Coffee",cat:"лікер",price:449,vol:"0.7л"},{id:300,name:"Captain Morgan Spiced Twin",cat:"ром",price:999,vol:"1.75л"},
+            {id:301,name:"Bacardi Superior Twin",cat:"ром",price:999,vol:"1.75л"},{id:302,name:"Jameson Caskmates Stout",cat:"віскі",price:899,vol:"0.7л"},{id:303,name:"Jack Daniel's Tennessee Honey Twin",cat:"віскі",price:1499,vol:"1.75л"},{id:304,name:"Johnnie Walker Blue Label",cat:"віскі",price:2999,vol:"0.7л"},{id:305,name:"Chivas Regal 18 Gift",cat:"віскі",price:1699,vol:"0.7л"},
+            {id:306,name:"Hennessy Paradis Rare",cat:"бренді",price:7999,vol:"0.7л"},{id:307,name:"Martell VSOP Gift Box",cat:"бренді",price:1399,vol:"0.7л"},{id:308,name:"Jagermeister 1L",cat:"лікер",price:799,vol:"1л"},{id:309,name:"Baileys 1L",cat:"лікер",price:799,vol:"1л"},{id:310,name:"Captain Morgan 1L",cat:"ром",price:799,vol:"1л"},
+            {id:311,name:"Bacardi 1L",cat:"ром",price:799,vol:"1л"},{id:312,name:"Jameson 1L",cat:"віскі",price:999,vol:"1л"}
+        ];
+
+        let cart = [];
+        let filter = "all";
+
+        function renderFilters() {
+            const cats = ["all", ...new Set(products.map(p => p.cat))];
+            let html = `<button onclick="setFilter('all')" class="px-5 py-2 rounded-3xl ${filter==='all'?'bg-amber-500 text-black':'bg-zinc-800'}">Всі (312)</button>`;
+            cats.forEach(c => {
+                if(c !== "all") html += `<button onclick="setFilter('${c}')" class="px-5 py-2 rounded-3xl ${filter===c?'bg-amber-500 text-black':'bg-zinc-800'}">${c}</button>`;
+            });
+            document.getElementById("filters").innerHTML = html;
+        }
+
+        function renderProducts() {
+            const filtered = filter === "all" ? products : products.filter(p => p.cat === filter);
+            let html = "";
+            filtered.forEach(p => {
+                html += `
+                <div class="product-card bg-zinc-900 rounded-3xl overflow-hidden border border-zinc-800">
+                    <div class="h-40 bg-zinc-800 flex items-center justify-center text-5xl">🍾</div>
+                    <div class="p-4">
+                        <div class="font-semibold text-lg">${p.name}</div>
+                        <div class="text-sm text-zinc-400">${p.vol}</div>
+                        <div class="flex justify-between items-end mt-4">
+                            <div><span class="text-3xl font-bold">${p.price}</span><span class="text-sm"> грн</span></div>
+                            <button onclick="addToCart(${p.id});event.stopImmediatePropagation()" class="bg-amber-500 text-black px-6 py-2 rounded-2xl text-sm font-semibold">В кошик</button>
+                        </div>
+                    </div>
+                </div>`;
+            });
+            document.getElementById("products").innerHTML = html || "<p class='col-span-full text-center text-zinc-400 py-12'>Немає товарів у цій категорії</p>";
+        }
+
+        function setFilter(f) {
+            filter = f;
+            renderFilters();
+            renderProducts();
+        }
+
+        function addToCart(id) {
+            const prod = products.find(p => p.id === id);
+            const exist = cart.find(item => item.id === id);
+            if (exist) exist.qty = (exist.qty || 1) + 1;
+            else cart.push({...prod, qty: 1});
+            updateCartCount();
+        }
+
+        function updateCartCount() {
+            const count = cart.reduce((sum, item) => sum + (item.qty || 1), 0);
+            document.getElementById("cart-count").textContent = count;
+        }
+
+        function renderCart() {
+            let html = "";
+            let total = 0;
+            cart.forEach((item, i) => {
+                const sum = item.price * (item.qty || 1);
+                total += sum;
+                html += `
+                <div class="flex gap-4 bg-zinc-900 p-5 rounded-3xl">
+                    <div class="flex-1">
+                        <div class="font-semibold">${item.name} ${item.vol}</div>
+                        <div class="text-amber-400">${item.price} грн × ${item.qty || 1}</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="font-bold">${sum} грн</div>
+                        <button onclick="changeQty(${i}, -1)" class="text-red-400 text-xl">-</button>
+                        <span class="mx-3 text-lg">${item.qty || 1}</span>
+                        <button onclick="changeQty(${i}, 1)" class="text-emerald-400 text-xl">+</button>
+                        <button onclick="removeFromCart(${i})" class="ml-6 text-red-500 text-2xl">×</button>
+                    </div>
+                </div>`;
+            });
+            document.getElementById("cart-items").innerHTML = html || "<p class='text-zinc-400 text-center py-8'>Кошик порожній</p>";
+            document.getElementById("total").textContent = total + " грн";
+        }
+
+        function changeQty(i, delta) {
+            cart[i].qty = (cart[i].qty || 1) + delta;
+            if (cart[i].qty < 1) cart.splice(i, 1);
+            renderCart();
+            updateCartCount();
+        }
+
+        function removeFromCart(i) {
+            cart.splice(i, 1);
+            renderCart();
+            updateCartCount();
+        }
+
+        function showSection(sec) {
+            document.getElementById("catalog").classList.add("hidden");
+            document.getElementById("cart").classList.add("hidden");
+            document.getElementById(sec).classList.remove("hidden");
+            if (sec === "cart") renderCart();
+        }
+
+        function openOrderModal() {
+            if (cart.length === 0) return alert("Кошик порожній");
+            document.getElementById("order-modal").classList.remove("hidden");
+        }
+
+        function submitOrder(e) {
+            e.preventDefault();
+            const name = document.getElementById("name").value;
+            const phone = document.getElementById("phone").value;
+            const tg = document.getElementById("telegram").value || "—";
+            const address = document.getElementById("address").value;
+            const comment = document.getElementById("comment").value || "—";
+
+            let orderText = `🛒 Нове замовлення з АлкоДоставка!\n\nІм'я: ${name}\nТел: ${phone}\nTelegram: ${tg}\nАдреса: ${address}\nКоментар: ${comment}\n\n`;
+            let total = 0;
+            cart.forEach(item => {
+                const sum = item.price * (item.qty || 1);
+                total += sum;
+                orderText += `${item.name} ${item.vol} × ${item.qty || 1} = ${sum} грн\n`;
+            });
+            orderText += `\nРазом: ${total} грн\nДоставка: безкоштовно від 1000 грн`;
+
+            const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+            fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ chat_id: CHAT_ID, text: orderText, parse_mode: "HTML" })
+            }).catch(() => {});
+
+            setTimeout(() => {
+                window.location.href = "https://t.me/founderAD";
+            }, 800);
+        }
+
+        renderFilters();
+        renderProducts();
+        updateCartCount();
+    </script>
+</body>
+</html>
+```
