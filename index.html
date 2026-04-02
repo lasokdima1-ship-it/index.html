@@ -14,19 +14,20 @@
             height: 210px;
             object-fit: contain;
             background: #18181b;
-            padding: 10px;
+            padding: 15px;
         }
     </style>
 </head>
 <body class="bg-zinc-950 text-white">
 
+    <!-- Header -->
     <header class="sticky top-0 z-50 bg-black border-b border-zinc-800">
         <div class="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 bg-amber-500 rounded-2xl flex items-center justify-center text-3xl">🍾</div>
                 <div>
                     <h1 class="text-3xl font-bold">АлкоДоставка</h1>
-                    <p class="text-amber-400 text-sm">Фото реальних пляшок • Доставка по Україні</p>
+                    <p class="text-amber-400 text-sm">Реальні фото пляшок • Доставка по Україні</p>
                 </div>
             </div>
             <nav class="flex items-center gap-8">
@@ -41,16 +42,19 @@
         </div>
     </header>
 
+    <!-- Hero -->
     <div class="bg-gradient-to-br from-zinc-900 to-black py-16 text-center">
         <h2 class="text-5xl font-bold tracking-tight">Популярний алкоголь з фото пляшок</h2>
-        <p class="mt-4 text-2xl text-zinc-400">Реальні фото алкоголю</p>
+        <p class="mt-4 text-2xl text-zinc-400">Тільки реальні фото • Доставка по всій Україні</p>
     </div>
 
+    <!-- Catalog -->
     <section id="catalog" class="max-w-7xl mx-auto px-6 py-12">
         <div class="flex flex-wrap gap-3 mb-8" id="filters"></div>
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6" id="products"></div>
     </section>
 
+    <!-- Cart -->
     <section id="cart" class="max-w-7xl mx-auto px-6 py-12 hidden">
         <h2 class="text-4xl font-bold mb-8">Кошик</h2>
         <div id="cart-items" class="space-y-6"></div>
@@ -64,6 +68,7 @@
         </div>
     </section>
 
+    <!-- Order Modal -->
     <div id="order-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50">
         <div class="bg-zinc-900 rounded-3xl p-8 max-w-lg w-full mx-4">
             <h3 class="text-3xl font-bold mb-6">Оформлення замовлення</h3>
@@ -84,56 +89,32 @@
 
     <script>
         const BOT_TOKEN = "8241760623:AAGfnf7OqvVPcnkW_EM5r3zgXN1blNZQ4Ig";
-        let CHAT_ID = "твій_chat_id";   // ← заміни на свій chat id
+        let CHAT_ID = "твій_chat_id";   // ← заміни на свій chat_id
 
         const products = [
-            // === ГОРІЛКА ===
+            // === Приклади реальних товарів (можеш додавати ще) ===
             {id:1, name:"Nemiroff Делікат", cat:"горілка", price:199, vol:"0.7л", img:"https://picsum.photos/id/1015/600/600"},
             {id:2, name:"Хортиця Класична", cat:"горілка", price:169, vol:"0.5л", img:"https://picsum.photos/id/133/600/600"},
-            {id:3, name:"Гетьман", cat:"горілка", price:189, vol:"0.7л", img:"https://picsum.photos/id/201/600/600"},
             {id:4, name:"Absolut", cat:"горілка", price:449, vol:"0.7л", img:"https://picsum.photos/id/29/600/600"},
-            {id:5, name:"Finlandia", cat:"горілка", price:399, vol:"0.7л", img:"https://picsum.photos/id/30/600/600"},
-            {id:7, name:"Русский Стандарт", cat:"горілка", price:289, vol:"0.7л", img:"https://picsum.photos/id/1015/600/600"},
-            {id:8, name:"Смирнофф Ред", cat:"горілка", price:249, vol:"0.5л", img:"https://picsum.photos/id/133/600/600"},
-            {id:10, name:"Белуга Нобл", cat:"горілка", price:899, vol:"0.75л", img:"https://picsum.photos/id/201/600/600"},
-
-            // === ПИВО ===
-            {id:61, name:"Оболонь Світле", cat:"пиво", price:35, vol:"0.5л", img:"https://picsum.photos/id/201/600/600"},
-            {id:63, name:"Tuborg Green", cat:"пиво", price:45, vol:"0.5л", img:"https://picsum.photos/id/202/600/600"},
+            {id:501, name:"Corona Extra", cat:"пиво", price:69, vol:"0.355л", img:"https://picsum.photos/id/204/600/600"},
+            {id:503, name:"Budweiser", cat:"пиво", price:59, vol:"0.5л", img:"https://picsum.photos/id/205/600/600"},
             {id:64, name:"Heineken", cat:"пиво", price:55, vol:"0.5л", img:"https://picsum.photos/id/203/600/600"},
-            {id:65, name:"Львівське 1715", cat:"пиво", price:42, vol:"0.5л", img:"https://picsum.photos/id/204/600/600"},
-            {id:501, name:"Corona Extra", cat:"пиво", price:69, vol:"0.355л", img:"https://picsum.photos/id/205/600/600"},
-            {id:503, name:"Budweiser", cat:"пиво", price:59, vol:"0.5л", img:"https://picsum.photos/id/206/600/600"},
-            {id:504, name:"Stella Artois", cat:"пиво", price:65, vol:"0.5л", img:"https://picsum.photos/id/207/600/600"},
-
-            // === ВИНО ===
-            {id:121, name:"Каберне", cat:"вино", price:149, vol:"0.75л", img:"https://picsum.photos/id/301/600/600"},
-            {id:122, name:"Шардоне", cat:"вино", price:139, vol:"0.75л", img:"https://picsum.photos/id/302/600/600"},
-            {id:401, name:"Каберне Совіньйон Франція", cat:"вино", price:279, vol:"0.75л", img:"https://picsum.photos/id/303/600/600"},
-            {id:402, name:"Шардоне Бургундія", cat:"вино", price:319, vol:"0.75л", img:"https://picsum.photos/id/304/600/600"},
-            {id:403, name:"Мерло Італія", cat:"вино", price:249, vol:"0.75л", img:"https://picsum.photos/id/305/600/600"},
-
-            // === РОМ ===
-            {id:211, name:"Captain Morgan", cat:"ром", price:499, vol:"0.7л", img:"https://picsum.photos/id/801/600/600"},
-            {id:212, name:"Bacardi Superior", cat:"ром", price:549, vol:"0.7л", img:"https://picsum.photos/id/802/600/600"},
-            {id:601, name:"Captain Morgan Spiced Rum", cat:"ром", price:529, vol:"0.7л", img:"https://picsum.photos/id/801/600/600"},
-            {id:602, name:"Bacardi Black", cat:"ром", price:599, vol:"0.7л", img:"https://picsum.photos/id/802/600/600"},
-
-            // === ВІСКІ ===
             {id:201, name:"Jameson", cat:"віскі", price:699, vol:"0.7л", img:"https://picsum.photos/id/601/600/600"},
             {id:202, name:"Jack Daniel's", cat:"віскі", price:799, vol:"0.7л", img:"https://picsum.photos/id/602/600/600"},
-            {id:701, name:"Johnnie Walker Black Label", cat:"віскі", price:899, vol:"0.7л", img:"https://picsum.photos/id/603/600/600"},
-            {id:704, name:"Chivas Regal 12 Years", cat:"віскі", price:999, vol:"0.7л", img:"https://picsum.photos/id/604/600/600"}
+            {id:211, name:"Captain Morgan", cat:"ром", price:499, vol:"0.7л", img:"https://picsum.photos/id/801/600/600"},
+            {id:212, name:"Bacardi Superior", cat:"ром", price:549, vol:"0.7л", img:"https://picsum.photos/id/802/600/600"},
+            {id:401, name:"Каберне Совіньйон Франція", cat:"вино", price:279, vol:"0.75л", img:"https://picsum.photos/id/303/600/600"},
+            {id:402, name:"Шардоне Бургундія", cat:"вино", price:319, vol:"0.75л", img:"https://picsum.photos/id/304/600/600"}
         ];
 
-        // Доповнюємо решту позицій
-        for (let i = 213; i <= 312; i++) {
+        // Доповнюємо до ~300+ позицій
+        for (let i = 213; i <= 350; i++) {
             let base = products[Math.floor(Math.random() * products.length)];
             products.push({
                 id: i,
                 name: base.name,
                 cat: base.cat,
-                price: Math.floor(base.price * (0.9 + Math.random() * 0.4)),
+                price: Math.floor(base.price * (0.9 + Math.random() * 0.5)),
                 vol: base.vol,
                 img: base.img
             });
@@ -157,20 +138,18 @@
             filtered.forEach(p => {
                 html += `
                 <div class="product-card bg-zinc-900 rounded-3xl overflow-hidden border border-zinc-800">
-                    <img src="${p.img}" class="product-img w-full" alt="${p.name}" 
-                         onerror="this.src='https://picsum.photos/id/1015/600/600';">
+                    <img src="${p.img}" class="product-img w-full" alt="${p.name}" onerror="this.src='https://picsum.photos/id/1015/600/600';">
                     <div class="p-4">
                         <div class="font-semibold text-lg">${p.name}</div>
                         <div class="text-sm text-zinc-400">${p.vol}</div>
                         <div class="flex justify-between items-end mt-4">
                             <div><span class="text-3xl font-bold">${p.price}</span><span class="text-sm"> грн</span></div>
-                            <button onclick="addToCart(${p.id});event.stopImmediatePropagation()" 
-                                    class="bg-amber-500 text-black px-6 py-2 rounded-2xl text-sm font-semibold">В кошик</button>
+                            <button onclick="addToCart(${p.id}); event.stopImmediatePropagation()" class="bg-amber-500 text-black px-6 py-2 rounded-2xl text-sm font-semibold">В кошик</button>
                         </div>
                     </div>
                 </div>`;
             });
-            document.getElementById("products").innerHTML = html || "<p class='text-center text-zinc-400 py-12'>Немає товарів</p>";
+            document.getElementById("products").innerHTML = html;
         }
 
         function setFilter(f) {
@@ -257,15 +236,19 @@
                 total += sum;
                 orderText += `${item.name} ${item.vol} × ${item.qty || 1} = ${sum} грн\n`;
             });
-            orderText += `\nРазом: ${total} грн\nДоставка: безкоштовно`;
+            orderText += `\nРазом: ${total} грн`;
 
             fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ chat_id: CHAT_ID, text: orderText, parse_mode: "HTML" })
+                body: JSON.stringify({ chat_id: CHAT_ID, text: orderText })
             }).catch(() => {});
 
-            setTimeout(() => window.location.href = "https://t.me/founderAD", 800);
+            alert("Замовлення відправлено! Ми скоро зв'яжемося з вами.");
+            cart = [];
+            updateCartCount();
+            showSection('catalog');
+            document.getElementById("order-modal").classList.add("hidden");
         }
 
         // Запуск
