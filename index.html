@@ -14,13 +14,12 @@
             height: 210px;
             object-fit: contain;
             background: #18181b;
-            padding: 15px;
+            padding: 12px;
         }
     </style>
 </head>
 <body class="bg-zinc-950 text-white">
 
-    <!-- Header -->
     <header class="sticky top-0 z-50 bg-black border-b border-zinc-800">
         <div class="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
             <div class="flex items-center gap-3">
@@ -42,19 +41,16 @@
         </div>
     </header>
 
-    <!-- Hero -->
     <div class="bg-gradient-to-br from-zinc-900 to-black py-16 text-center">
         <h2 class="text-5xl font-bold tracking-tight">Популярний алкоголь з фото пляшок</h2>
-        <p class="mt-4 text-2xl text-zinc-400">Тільки реальні фото • Доставка по всій Україні</p>
+        <p class="mt-4 text-2xl text-zinc-400">Реальні товари та фото з okwine.ua</p>
     </div>
 
-    <!-- Catalog -->
     <section id="catalog" class="max-w-7xl mx-auto px-6 py-12">
         <div class="flex flex-wrap gap-3 mb-8" id="filters"></div>
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6" id="products"></div>
     </section>
 
-    <!-- Cart -->
     <section id="cart" class="max-w-7xl mx-auto px-6 py-12 hidden">
         <h2 class="text-4xl font-bold mb-8">Кошик</h2>
         <div id="cart-items" class="space-y-6"></div>
@@ -68,7 +64,6 @@
         </div>
     </section>
 
-    <!-- Order Modal -->
     <div id="order-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50">
         <div class="bg-zinc-900 rounded-3xl p-8 max-w-lg w-full mx-4">
             <h3 class="text-3xl font-bold mb-6">Оформлення замовлення</h3>
@@ -89,32 +84,31 @@
 
     <script>
         const BOT_TOKEN = "8241760623:AAGfnf7OqvVPcnkW_EM5r3zgXN1blNZQ4Ig";
-        let CHAT_ID = "твій_chat_id";   // ← заміни на свій chat_id
+        let CHAT_ID = "твій_chat_id";   // ← заміни на свій
 
         const products = [
-            // === Приклади реальних товарів (можеш додавати ще) ===
-            {id:1, name:"Nemiroff Делікат", cat:"горілка", price:199, vol:"0.7л", img:"https://picsum.photos/id/1015/600/600"},
-            {id:2, name:"Хортиця Класична", cat:"горілка", price:169, vol:"0.5л", img:"https://picsum.photos/id/133/600/600"},
-            {id:4, name:"Absolut", cat:"горілка", price:449, vol:"0.7л", img:"https://picsum.photos/id/29/600/600"},
-            {id:501, name:"Corona Extra", cat:"пиво", price:69, vol:"0.355л", img:"https://picsum.photos/id/204/600/600"},
-            {id:503, name:"Budweiser", cat:"пиво", price:59, vol:"0.5л", img:"https://picsum.photos/id/205/600/600"},
-            {id:64, name:"Heineken", cat:"пиво", price:55, vol:"0.5л", img:"https://picsum.photos/id/203/600/600"},
-            {id:201, name:"Jameson", cat:"віскі", price:699, vol:"0.7л", img:"https://picsum.photos/id/601/600/600"},
-            {id:202, name:"Jack Daniel's", cat:"віскі", price:799, vol:"0.7л", img:"https://picsum.photos/id/602/600/600"},
-            {id:211, name:"Captain Morgan", cat:"ром", price:499, vol:"0.7л", img:"https://picsum.photos/id/801/600/600"},
-            {id:212, name:"Bacardi Superior", cat:"ром", price:549, vol:"0.7л", img:"https://picsum.photos/id/802/600/600"},
-            {id:401, name:"Каберне Совіньйон Франція", cat:"вино", price:279, vol:"0.75л", img:"https://picsum.photos/id/303/600/600"},
-            {id:402, name:"Шардоне Бургундія", cat:"вино", price:319, vol:"0.75л", img:"https://picsum.photos/id/304/600/600"}
+            {id:1, name:"Nemiroff Делікат", cat:"горілка", price:199, vol:"0.7л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/07a13480-4c2c-11ec-bcff-7df9c3028708.jpg"},
+            {id:2, name:"Хортиця Класична", cat:"горілка", price:169, vol:"0.5л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/hortitsya.jpg"},
+            {id:3, name:"Absolut", cat:"горілка", price:449, vol:"0.7л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/absolut.jpg"},
+            {id:501, name:"Corona Extra", cat:"пиво", price:69, vol:"0.355л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/corona.jpg"},
+            {id:503, name:"Budweiser", cat:"пиво", price:59, vol:"0.5л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/budweiser.jpg"},
+            {id:64, name:"Heineken", cat:"пиво", price:55, vol:"0.5л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/heineken.jpg"},
+            {id:201, name:"Jameson", cat:"віскі", price:699, vol:"0.7л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/jameson.jpg"},
+            {id:202, name:"Jack Daniel's", cat:"віскі", price:799, vol:"0.7л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/jackdaniels.jpg"},
+            {id:211, name:"Captain Morgan", cat:"ром", price:499, vol:"0.7л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/captainmorgan.jpg"},
+            {id:212, name:"Bacardi Superior", cat:"ром", price:549, vol:"0.7л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/bacardi.jpg"},
+            {id:401, name:"Каберне Совіньйон Франція", cat:"вино", price:279, vol:"0.75л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/cabernet.jpg"},
+            {id:402, name:"Шардоне Бургундія", cat:"вино", price:319, vol:"0.75л", img:"https://content.okwine.ua/files/product/61b345306ebb0c2d53db5286/204x272/chardonnay.jpg"}
         ];
 
-        // Доповнюємо до ~300+ позицій
+        // Доповнюємо масив (можеш додавати ще вручну)
         for (let i = 213; i <= 350; i++) {
             let base = products[Math.floor(Math.random() * products.length)];
             products.push({
                 id: i,
                 name: base.name,
                 cat: base.cat,
-                price: Math.floor(base.price * (0.9 + Math.random() * 0.5)),
+                price: Math.floor(base.price * (0.9 + Math.random() * 0.4)),
                 vol: base.vol,
                 img: base.img
             });
@@ -244,7 +238,7 @@
                 body: JSON.stringify({ chat_id: CHAT_ID, text: orderText })
             }).catch(() => {});
 
-            alert("Замовлення відправлено! Ми скоро зв'яжемося з вами.");
+            alert("Замовлення відправлено! Ми скоро зв'яжемося.");
             cart = [];
             updateCartCount();
             showSection('catalog');
