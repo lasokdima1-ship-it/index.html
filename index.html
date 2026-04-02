@@ -136,18 +136,7 @@
 {id:704, name:"Chivas Regal", cat:"віскі", price:999, vol:"0.7л", img:"https://www.emporioaugusta.com.br/loja/image/cache/catalog/data/Whisky/chivas-12-1024x1024.jpg"},
 {id:705, name:"Jim Beam", cat:"віскі", price:599, vol:"0.7л", img:"https://www.aklehr.com/wp-content/gallery/jim-beam/Jim-Beam_30.jpg"}          
 ];
-        // Автодоповнення решти позицій до ~312
-        for (let i = 213; i <= 312; i++) {
-            let base = products[Math.floor(Math.random() * products.length)];
-            products.push({
-                id: i,
-                name: base.name + (i % 5 === 0 ? " Premium" : ""),
-                cat: base.cat,
-                price: Math.floor(base.price * (0.85 + Math.random() * 0.5)),
-                vol: base.vol,
-                img: base.img
-            });
-        }
+        
 
         let cart = [];
         let filter = "all";
