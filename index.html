@@ -7,76 +7,150 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        body { font-family: system-ui, -apple-system, sans-serif; }
-        .product-card { transition: all 0.3s; }
-        .product-card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1); }
+        body { 
+            font-family: system-ui, -apple-system, sans-serif; 
+        }
+        .product-card { 
+            transition: all 0.3s; 
+        }
+        .product-card:hover { 
+            transform: translateY(-6px); 
+            box-shadow: 0 15px 20px -5px rgb(0 0 0 / 0.1); 
+        }
         .product-img {
-            height: 200px;
+            height: 170px;
             object-fit: contain;
             background: #18181b;
-            padding: 15px;
+            padding: 12px;
             border-bottom: 1px solid #27272a;
+        }
+
+        /* Hamburger menu animation */
+        .hamburger span {
+            transition: all 0.3s ease;
+        }
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
         }
     </style>
 </head>
 <body class="bg-zinc-950 text-white">
+
+    <!-- HEADER -->
     <header class="sticky top-0 z-50 bg-black border-b border-zinc-800">
-        <div class="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-amber-500 rounded-2xl flex items-center justify-center text-3xl">🍾</div>
-                <div>
-                    <h1 class="text-3xl font-bold">АлкоДоставка</h1>
-                    <p class="text-amber-400 text-sm">312 позицій • Доставка 24/7</p>
+        <div class="max-w-7xl mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <!-- Logo -->
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 bg-amber-500 rounded-2xl flex items-center justify-center text-3xl">🍾</div>
+                    <div>
+                        <h1 class="text-2xl font-bold">АлкоДоставка</h1>
+                        <p class="text-amber-400 text-xs">312 позицій • 24/7</p>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex items-center gap-8 text-sm">
+                    <a onclick="showSection('catalog')" class="cursor-pointer hover:text-amber-400 transition-colors">Каталог</a>
+                    <a onclick="showSection('cart')" class="cursor-pointer flex items-center gap-2 hover:text-amber-400 transition-colors">
+                        Кошик 
+                        <span id="cart-count" class="bg-amber-500 text-black px-2.5 py-0.5 rounded-full text-xs font-bold">0</span>
+                    </a>
+                </nav>
+
+                <!-- Right side -->
+                <div class="flex items-center gap-3">
+                    <a href="https://t.me/founderAD" target="_blank" 
+                       class="bg-amber-500 hover:bg-amber-600 text-black px-5 py-2.5 rounded-2xl font-semibold flex items-center gap-2 text-sm transition">
+                        <i class="fab fa-telegram"></i>
+                        <span class="hidden sm:inline">Telegram</span>
+                    </a>
+
+                    <!-- Hamburger Button -->
+                    <button id="hamburger-btn" onclick="toggleMobileMenu()" 
+                            class="hamburger md:hidden w-11 h-11 flex flex-col items-center justify-center gap-1.5 focus:outline-none">
+                        <span class="w-6 h-0.5 bg-white rounded"></span>
+                        <span class="w-6 h-0.5 bg-white rounded"></span>
+                        <span class="w-6 h-0.5 bg-white rounded"></span>
+                    </button>
                 </div>
             </div>
-            <nav class="flex items-center gap-8">
-                <a onclick="showSection('catalog')" class="cursor-pointer hover:text-amber-400">Каталог</a>
-                <a onclick="showSection('cart')" class="cursor-pointer flex items-center gap-2 hover:text-amber-400">
-                    Кошик <span id="cart-count" class="bg-amber-500 text-black px-2 py-0.5 rounded-full text-xs font-bold">0</span>
-                </a>
-                <a href="https://t.me/founderAD" target="_blank" class="bg-amber-500 text-black px-6 py-3 rounded-2xl font-semibold flex items-center gap-2">
-                    <i class="fab fa-telegram"></i> TELEGRAM
-                </a>
-            </nav>
+
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden mt-4 pt-4 border-t border-zinc-800">
+                <div class="flex flex-col gap-5 text-lg">
+                    <a onclick="showSection('catalog'); toggleMobileMenu()" class="cursor-pointer hover:text-amber-400 py-2">Каталог</a>
+                    <a onclick="showSection('cart'); toggleMobileMenu()" class="cursor-pointer flex items-center justify-between hover:text-amber-400 py-2">
+                        Кошик 
+                        <span id="mobile-cart-count" class="bg-amber-500 text-black px-3 py-1 rounded-full text-sm font-bold">0</span>
+                    </a>
+                </div>
+            </div>
         </div>
     </header>
 
-    <div class="bg-gradient-to-br from-zinc-900 to-black py-16 text-center">
-        <h2 class="text-5xl font-bold tracking-tight">Доставимо навіть уночі</h2>
-        <p class="mt-4 text-2xl text-zinc-400">312 позицій • алкоголю</p>
+    <!-- HERO -->
+    <div class="bg-gradient-to-br from-zinc-900 to-black py-12 sm:py-16 text-center px-4">
+        <h2 class="text-4xl sm:text-5xl font-bold tracking-tight">Доставимо навіть уночі</h2>
+        <p class="mt-3 text-lg sm:text-2xl text-zinc-400">312 позицій алкоголю • Доставка 24/7</p>
     </div>
 
-    <section id="catalog" class="max-w-7xl mx-auto px-6 py-12">
-        <div class="flex flex-wrap gap-3 mb-8" id="filters"></div>
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6" id="products"></div>
+    <!-- CATALOG -->
+    <section id="catalog" class="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+        <div class="flex flex-wrap gap-2 mb-8 overflow-x-auto pb-3" id="filters"></div>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6" id="products"></div>
     </section>
 
-    <section id="cart" class="max-w-7xl mx-auto px-6 py-12 hidden">
-        <h2 class="text-4xl font-bold mb-8">Кошик</h2>
+    <!-- CART -->
+    <section id="cart" class="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 hidden">
+        <h2 class="text-3xl sm:text-4xl font-bold mb-8">Кошик</h2>
         <div id="cart-items" class="space-y-6"></div>
-        <div class="bg-zinc-900 p-8 rounded-3xl max-w-md ml-auto mt-10">
+
+        <div class="bg-zinc-900 p-6 sm:p-8 rounded-3xl max-w-md mx-auto sm:ml-auto mt-12">
             <div class="flex justify-between text-2xl mb-6">
                 <span>Разом:</span>
                 <span id="total" class="font-semibold">0 грн</span>
             </div>
-            <button onclick="openOrderModal()" class="w-full bg-amber-500 text-black py-6 rounded-3xl text-2xl font-semibold">Оформити замовлення</button>
+            <button onclick="openOrderModal()" 
+                    class="w-full bg-amber-500 hover:bg-amber-600 text-black py-5 sm:py-6 rounded-3xl text-xl font-semibold transition">
+                Оформити замовлення
+            </button>
             <p class="text-center text-sm text-emerald-400 mt-4">Доставка безкоштовна від 1000 грн</p>
         </div>
     </section>
 
-    <div id="order-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-        <div class="bg-zinc-900 rounded-3xl p-8 max-w-lg w-full mx-4">
-            <h3 class="text-3xl font-bold mb-6">Оформлення замовлення</h3>
+    <!-- ORDER MODAL -->
+    <div id="order-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+        <div class="bg-zinc-900 rounded-3xl p-6 sm:p-8 max-w-lg w-full">
+            <h3 class="text-2xl sm:text-3xl font-bold mb-6">Оформлення замовлення</h3>
             <form id="order-form" onsubmit="submitOrder(event)">
                 <div class="space-y-5">
-                    <input id="name" type="text" placeholder="Ім'я Прізвище" required class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4">
-                    <div class="grid grid-cols-2 gap-5">
-                        <input id="phone" type="tel" placeholder="+380 (__) ___-__-__" required class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4">
-                        <input id="telegram" type="text" placeholder="@username" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4">
+                    <input id="name" type="text" placeholder="Ім'я Прізвище" required 
+                           class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 text-base">
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <input id="phone" type="tel" placeholder="+380 (__) ___-__-__" required 
+                               class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 text-base">
+                        <input id="telegram" type="text" placeholder="@username" 
+                               class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 text-base">
                     </div>
-                    <textarea id="address" rows="3" placeholder="Адреса доставки" required class="w-full bg-zinc-800 border border-zinc-700 rounded-3xl px-5 py-4"></textarea>
-                    <input id="comment" type="text" placeholder="Коментар" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4">
-                    <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-black py-6 rounded-3xl text-2xl font-semibold">Надіслати замовлення</button>
+                    
+                    <textarea id="address" rows="3" placeholder="Адреса доставки" required 
+                              class="w-full bg-zinc-800 border border-zinc-700 rounded-3xl px-5 py-4 text-base"></textarea>
+                    
+                    <input id="comment" type="text" placeholder="Коментар" 
+                           class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 text-base">
+                    
+                    <button type="submit" 
+                            class="w-full bg-amber-500 hover:bg-amber-600 text-black py-6 rounded-3xl text-xl font-semibold transition">
+                        Надіслати замовлення
+                    </button>
                 </div>
             </form>
         </div>
@@ -84,68 +158,63 @@
 
     <script>
         const BOT_TOKEN = "8241760623:AAGfnf7OqvVPcnkW_EM5r3zgXN1blNZQ4Ig";
-        let CHAT_ID = "твій_chat_id";   // ← ОБОВ'ЯЗКОВО ЗАМІНИ НА СВІЙ CHAT ID!
+        let CHAT_ID = "твій_chat_id"; // ← ОБОВ'ЯЗКОВО ЗАМІНИ НА СВІЙ CHAT ID!
 
         const products = [
-      // ГОРІЛКА
-{id:1, name:"Nemiroff Делікат", cat:"горілка", price:199, vol:"0.7л", img:"https://source.unsplash.com/600x600/?vodka,bottle,clear"},
-{id:2, name:"Хортиця Класична", cat:"горілка", price:169, vol:"0.5л", img:"https://source.unsplash.com/600x600/?vodka,glass,bottle"},
-{id:3, name:"Гетьман", cat:"горілка", price:189, vol:"0.7л", img:"https://source.unsplash.com/600x600/?vodka,drink"},
-{id:4, name:"Absolut", cat:"горілка", price:449, vol:"0.7л", img:"https://source.unsplash.com/600x600/?absolut,vodka"},
-{id:5, name:"Finlandia", cat:"горілка", price:399, vol:"0.7л", img:"https://source.unsplash.com/600x600/?vodka,ice,bottle"},
-{id:7, name:"Русский Стандарт", cat:"горілка", price:289, vol:"0.7л", img:"https://source.unsplash.com/600x600/?premium,vodka"},
-{id:8, name:"Смирнофф Ред", cat:"горілка", price:249, vol:"0.5л", img:"https://source.unsplash.com/600x600/?smirnoff"},
-{id:10, name:"Белуга Нобл", cat:"горілка", price:899, vol:"0.75л", img:"https://source.unsplash.com/600x600/?luxury,vodka"},
-
-// ПИВО
-{id:61, name:"Оболонь Світле", cat:"пиво", price:35, vol:"0.5л", img:"https://source.unsplash.com/600x600/?beer,bottle"},
-{id:63, name:"Tuborg Green", cat:"пиво", price:45, vol:"0.5л", img:"https://source.unsplash.com/600x600/?green,beer"},
-{id:64, name:"Heineken", cat:"пиво", price:55, vol:"0.5л", img:"https://source.unsplash.com/600x600/?heineken"},
-{id:65, name:"Львівське 1715", cat:"пиво", price:42, vol:"0.5л", img:"https://source.unsplash.com/600x600/?beer,glass"},
-
-{id:501, name:"Corona Extra", cat:"пиво", price:69, vol:"0.355л", img:"https://source.unsplash.com/600x600/?corona,beer"},
-{id:502, name:"Corona Extra 6-pack", cat:"пиво", price:389, vol:"6x0.355л", img:"https://source.unsplash.com/600x600/?beer,pack"},
-{id:503, name:"Budweiser", cat:"пиво", price:59, vol:"0.5л", img:"https://source.unsplash.com/600x600/?budweiser"},
-{id:504, name:"Stella Artois", cat:"пиво", price:65, vol:"0.5л", img:"https://source.unsplash.com/600x600/?stella,beer"},
-{id:505, name:"Guinness Draught", cat:"пиво", price:89, vol:"0.44л", img:"https://source.unsplash.com/600x600/?guinness"},
-
-// ВИНО
-{id:121, name:"Каберне", cat:"вино", price:149, vol:"0.75л", img:"https://source.unsplash.com/600x600/?red,wine,bottle"},
-{id:122, name:"Шардоне", cat:"вино", price:139, vol:"0.75л", img:"https://source.unsplash.com/600x600/?white,wine,bottle"},
-
-{id:401, name:"Каберне Совіньйон Франція", cat:"вино", price:279, vol:"0.75л", img:"https://source.unsplash.com/600x600/?cabernet,wine"},
-{id:402, name:"Шардоне Бургундія", cat:"вино", price:319, vol:"0.75л", img:"https://source.unsplash.com/600x600/?chardonnay"},
-{id:403, name:"Мерло Італія", cat:"вино", price:249, vol:"0.75л", img:"https://source.unsplash.com/600x600/?merlot,wine"},
-{id:404, name:"Піно Нуар", cat:"вино", price:359, vol:"0.75л", img:"https://source.unsplash.com/600x600/?pinot,noir"},
-{id:405, name:"Совіньйон Блан", cat:"вино", price:289, vol:"0.75л", img:"https://source.unsplash.com/600x600/?sauvignon,blanc"},
-
-// ІГРИСТЕ
-{id:171, name:"Ігристе вино Біле", cat:"ігристе", price:189, vol:"0.75л", img:"https://source.unsplash.com/600x600/?champagne"},
-{id:172, name:"Просекко", cat:"ігристе", price:399, vol:"0.75л", img:"https://source.unsplash.com/600x600/?prosecco"},
-
-// РОМ
-{id:211, name:"Captain Morgan", cat:"ром", price:499, vol:"0.7л", img:"https://source.unsplash.com/600x600/?rum,bottle"},
-{id:212, name:"Bacardi Superior", cat:"ром", price:549, vol:"0.7л", img:"https://source.unsplash.com/600x600/?bacardi"},
-{id:603, name:"Bacardi Black", cat:"ром", price:599, vol:"0.7л", img:"https://source.unsplash.com/600x600/?dark,rum"},
-{id:604, name:"Havana Club", cat:"ром", price:649, vol:"0.7л", img:"https://source.unsplash.com/600x600/?cuban,rum"},
-
-// ВІСКІ
-{id:201, name:"Jameson", cat:"віскі", price:699, vol:"0.7л", img:"https://source.unsplash.com/600x600/?irish,whiskey"},
-{id:202, name:"Jack Daniel's", cat:"віскі", price:799, vol:"0.7л", img:"https://images.washingtonpost.com/?url=http://img.washingtonpost.com/news/morning-mix/wp-content/uploads/sites/21/2016/06/Jack-Daniels-Tennessee-Whiskey.jpg&w=1484&op=resize&opt=1&filter=antialias"},
-{id:703, name:"Johnnie Walker Black", cat:"віскі", price:899, vol:"0.7л", img:"https://tse2.mm.bing.net/th/id/OIP.CgXpB9FiBbGEE403U0jTWQHaHa?rs=1&pid=ImgDetMain&o=7&rm=3"},
-{id:704, name:"Chivas Regal", cat:"віскі", price:999, vol:"0.7л", img:"https://www.emporioaugusta.com.br/loja/image/cache/catalog/data/Whisky/chivas-12-1024x1024.jpg"},
-{id:705, name:"Jim Beam", cat:"віскі", price:599, vol:"0.7л", img:"https://www.aklehr.com/wp-content/gallery/jim-beam/Jim-Beam_30.jpg"}          
-];
-        
+            // ГОРІЛКА
+            {id:1, name:"Nemiroff Делікат", cat:"горілка", price:199, vol:"0.7л", img:"https://source.unsplash.com/600x600/?vodka,bottle,clear"},
+            {id:2, name:"Хортиця Класична", cat:"горілка", price:169, vol:"0.5л", img:"https://source.unsplash.com/600x600/?vodka,glass,bottle"},
+            {id:3, name:"Гетьман", cat:"горілка", price:189, vol:"0.7л", img:"https://source.unsplash.com/600x600/?vodka,drink"},
+            {id:4, name:"Absolut", cat:"горілка", price:449, vol:"0.7л", img:"https://source.unsplash.com/600x600/?absolut,vodka"},
+            {id:5, name:"Finlandia", cat:"горілка", price:399, vol:"0.7л", img:"https://source.unsplash.com/600x600/?vodka,ice,bottle"},
+            {id:7, name:"Русский Стандарт", cat:"горілка", price:289, vol:"0.7л", img:"https://source.unsplash.com/600x600/?premium,vodka"},
+            {id:8, name:"Смирнофф Ред", cat:"горілка", price:249, vol:"0.5л", img:"https://source.unsplash.com/600x600/?smirnoff"},
+            {id:10, name:"Белуга Нобл", cat:"горілка", price:899, vol:"0.75л", img:"https://source.unsplash.com/600x600/?luxury,vodka"},
+            // ПИВО
+            {id:61, name:"Оболонь Світле", cat:"пиво", price:35, vol:"0.5л", img:"https://source.unsplash.com/600x600/?beer,bottle"},
+            {id:63, name:"Tuborg Green", cat:"пиво", price:45, vol:"0.5л", img:"https://source.unsplash.com/600x600/?green,beer"},
+            {id:64, name:"Heineken", cat:"пиво", price:55, vol:"0.5л", img:"https://source.unsplash.com/600x600/?heineken"},
+            {id:65, name:"Львівське 1715", cat:"пиво", price:42, vol:"0.5л", img:"https://source.unsplash.com/600x600/?beer,glass"},
+            {id:501, name:"Corona Extra", cat:"пиво", price:69, vol:"0.355л", img:"https://source.unsplash.com/600x600/?corona,beer"},
+            {id:502, name:"Corona Extra 6-pack", cat:"пиво", price:389, vol:"6x0.355л", img:"https://source.unsplash.com/600x600/?beer,pack"},
+            {id:503, name:"Budweiser", cat:"пиво", price:59, vol:"0.5л", img:"https://source.unsplash.com/600x600/?budweiser"},
+            {id:504, name:"Stella Artois", cat:"пиво", price:65, vol:"0.5л", img:"https://source.unsplash.com/600x600/?stella,beer"},
+            {id:505, name:"Guinness Draught", cat:"пиво", price:89, vol:"0.44л", img:"https://source.unsplash.com/600x600/?guinness"},
+            // ВИНО
+            {id:121, name:"Каберне", cat:"вино", price:149, vol:"0.75л", img:"https://source.unsplash.com/600x600/?red,wine,bottle"},
+            {id:122, name:"Шардоне", cat:"вино", price:139, vol:"0.75л", img:"https://source.unsplash.com/600x600/?white,wine,bottle"},
+            {id:401, name:"Каберне Совіньйон Франція", cat:"вино", price:279, vol:"0.75л", img:"https://source.unsplash.com/600x600/?cabernet,wine"},
+            {id:402, name:"Шардоне Бургундія", cat:"вино", price:319, vol:"0.75л", img:"https://source.unsplash.com/600x600/?chardonnay"},
+            {id:403, name:"Мерло Італія", cat:"вино", price:249, vol:"0.75л", img:"https://source.unsplash.com/600x600/?merlot,wine"},
+            {id:404, name:"Піно Нуар", cat:"вино", price:359, vol:"0.75л", img:"https://source.unsplash.com/600x600/?pinot,noir"},
+            {id:405, name:"Совіньйон Блан", cat:"вино", price:289, vol:"0.75л", img:"https://source.unsplash.com/600x600/?sauvignon,blanc"},
+            // ІГРИСТЕ
+            {id:171, name:"Ігристе вино Біле", cat:"ігристе", price:189, vol:"0.75л", img:"https://source.unsplash.com/600x600/?champagne"},
+            {id:172, name:"Просекко", cat:"ігристе", price:399, vol:"0.75л", img:"https://source.unsplash.com/600x600/?prosecco"},
+            // РОМ
+            {id:211, name:"Captain Morgan", cat:"ром", price:499, vol:"0.7л", img:"https://source.unsplash.com/600x600/?rum,bottle"},
+            {id:212, name:"Bacardi Superior", cat:"ром", price:549, vol:"0.7л", img:"https://source.unsplash.com/600x600/?bacardi"},
+            {id:603, name:"Bacardi Black", cat:"ром", price:599, vol:"0.7л", img:"https://source.unsplash.com/600x600/?dark,rum"},
+            {id:604, name:"Havana Club", cat:"ром", price:649, vol:"0.7л", img:"https://source.unsplash.com/600x600/?cuban,rum"},
+            // ВІСКІ
+            {id:201, name:"Jameson", cat:"віскі", price:699, vol:"0.7л", img:"https://source.unsplash.com/600x600/?irish,whiskey"},
+            {id:202, name:"Jack Daniel's", cat:"віскі", price:799, vol:"0.7л", img:"https://images.washingtonpost.com/?url=http://img.washingtonpost.com/news/morning-mix/wp-content/uploads/sites/21/2016/06/Jack-Daniels-Tennessee-Whiskey.jpg&w=1484&op=resize&opt=1&filter=antialias"},
+            {id:703, name:"Johnnie Walker Black", cat:"віскі", price:899, vol:"0.7л", img:"https://tse2.mm.bing.net/th/id/OIP.CgXpB9FiBbGEE403U0jTWQHaHa?rs=1&pid=ImgDetMain&o=7&rm=3"},
+            {id:704, name:"Chivas Regal", cat:"віскі", price:999, vol:"0.7л", img:"https://www.emporioaugusta.com.br/loja/image/cache/catalog/data/Whisky/chivas-12-1024x1024.jpg"},
+            {id:705, name:"Jim Beam", cat:"віскі", price:599, vol:"0.7л", img:"https://www.aklehr.com/wp-content/gallery/jim-beam/Jim-Beam_30.jpg"}
+        ];
 
         let cart = [];
         let filter = "all";
 
         function renderFilters() {
             const cats = ["all", ...new Set(products.map(p => p.cat))];
-            let html = `<button onclick="setFilter('all')" class="px-5 py-2 rounded-3xl ${filter==='all'?'bg-amber-500 text-black':'bg-zinc-800'}">Всі (${products.length})</button>`;
+            let html = `<button onclick="setFilter('all')" class="px-6 py-3 rounded-3xl whitespace-nowrap text-sm ${filter==='all' ? 'bg-amber-500 text-black' : 'bg-zinc-800 hover:bg-zinc-700'}">Всі (${products.length})</button>`;
+            
             cats.forEach(c => {
-                if(c !== "all") html += `<button onclick="setFilter('${c}')" class="px-5 py-2 rounded-3xl ${filter===c?'bg-amber-500 text-black':'bg-zinc-800'}">${c}</button>`;
+                if (c !== "all") {
+                    html += `<button onclick="setFilter('${c}')" class="px-6 py-3 rounded-3xl whitespace-nowrap text-sm ${filter===c ? 'bg-amber-500 text-black' : 'bg-zinc-800 hover:bg-zinc-700'}">${c}</button>`;
+                }
             });
             document.getElementById("filters").innerHTML = html;
         }
@@ -156,13 +225,20 @@
             filtered.forEach(p => {
                 html += `
                 <div class="product-card bg-zinc-900 rounded-3xl overflow-hidden border border-zinc-800">
-                    <img src="${p.img}" class="product-img w-full" alt="${p.name}" onerror="this.src='https://source.unsplash.com/random/600x600/?alcohol-bottle';">
+                    <img src="${p.img}" class="product-img w-full" alt="${p.name}" 
+                         onerror="this.src='https://source.unsplash.com/random/600x600/?alcohol-bottle';">
                     <div class="p-4">
-                        <div class="font-semibold text-lg">${p.name}</div>
-                        <div class="text-sm text-zinc-400">${p.vol}</div>
-                        <div class="flex justify-between items-end mt-4">
-                            <div><span class="text-3xl font-bold">${p.price}</span><span class="text-sm"> грн</span></div>
-                            <button onclick="addToCart(${p.id}); event.stopImmediatePropagation()" class="bg-amber-500 text-black px-6 py-2 rounded-2xl text-sm font-semibold">В кошик</button>
+                        <div class="font-semibold text-base leading-tight">${p.name}</div>
+                        <div class="text-sm text-zinc-400 mt-1">${p.vol}</div>
+                        <div class="flex justify-between items-end mt-5">
+                            <div>
+                                <span class="text-2xl font-bold">${p.price}</span>
+                                <span class="text-sm text-zinc-400"> грн</span>
+                            </div>
+                            <button onclick="addToCart(${p.id}); event.stopImmediatePropagation()" 
+                                    class="bg-amber-500 hover:bg-amber-600 text-black px-5 py-2.5 rounded-2xl text-sm font-semibold transition">
+                                В кошик
+                            </button>
                         </div>
                     </div>
                 </div>`;
@@ -187,6 +263,8 @@
         function updateCartCount() {
             const count = cart.reduce((sum, item) => sum + (item.qty || 1), 0);
             document.getElementById("cart-count").textContent = count;
+            const mobileCount = document.getElementById("mobile-cart-count");
+            if (mobileCount) mobileCount.textContent = count;
         }
 
         function renderCart() {
@@ -196,21 +274,24 @@
                 total += sum;
                 html += `
                 <div class="flex gap-4 bg-zinc-900 p-5 rounded-3xl">
-                    <img src="${item.img}" class="w-20 h-20 object-contain" onerror="this.src='https://source.unsplash.com/random/600x600/?alcohol-bottle';">
-                    <div class="flex-1">
-                        <div class="font-semibold">${item.name} ${item.vol}</div>
-                        <div class="text-amber-400">${item.price} грн × ${item.qty || 1}</div>
+                    <img src="${item.img}" class="w-20 h-20 object-contain rounded-xl" 
+                         onerror="this.src='https://source.unsplash.com/random/600x600/?alcohol-bottle';">
+                    <div class="flex-1 min-w-0">
+                        <div class="font-semibold text-base leading-tight">${item.name} ${item.vol}</div>
+                        <div class="text-amber-400 text-sm mt-1">${item.price} грн × ${item.qty || 1}</div>
                     </div>
-                    <div class="text-right">
-                        <div class="font-bold">${sum} грн</div>
-                        <button onclick="changeQty(${i}, -1)" class="text-red-400 text-xl">-</button>
-                        <span class="mx-3 text-lg">${item.qty || 1}</span>
-                        <button onclick="changeQty(${i}, 1)" class="text-emerald-400 text-xl">+</button>
-                        <button onclick="removeFromCart(${i})" class="ml-6 text-red-500 text-2xl">×</button>
+                    <div class="text-right flex-shrink-0">
+                        <div class="font-bold text-lg">${sum} грн</div>
+                        <div class="mt-3 flex items-center justify-end gap-3">
+                            <button onclick="changeQty(${i}, -1)" class="text-red-400 text-2xl w-7 h-7 flex items-center justify-center">-</button>
+                            <span class="text-lg w-6 text-center">${item.qty || 1}</span>
+                            <button onclick="changeQty(${i}, 1)" class="text-emerald-400 text-2xl w-7 h-7 flex items-center justify-center">+</button>
+                            <button onclick="removeFromCart(${i})" class="ml-4 text-red-500 text-3xl leading-none">×</button>
+                        </div>
                     </div>
                 </div>`;
             });
-            document.getElementById("cart-items").innerHTML = html || "<p class='text-zinc-400 text-center py-8'>Кошик порожній</p>";
+            document.getElementById("cart-items").innerHTML = html || "<p class='text-zinc-400 text-center py-12'>Кошик порожній</p>";
             document.getElementById("total").textContent = total + " грн";
         }
 
@@ -234,6 +315,13 @@
             if (sec === "cart") renderCart();
         }
 
+        function toggleMobileMenu() {
+            const menu = document.getElementById("mobile-menu");
+            const btn = document.getElementById("hamburger-btn");
+            menu.classList.toggle("hidden");
+            btn.classList.toggle("active");
+        }
+
         function openOrderModal() {
             if (cart.length === 0) return alert("Кошик порожній");
             document.getElementById("order-modal").classList.remove("hidden");
@@ -249,23 +337,25 @@
 
             let orderText = `🛒 Нове замовлення!\n\nІм'я: ${name}\nТел: ${phone}\nTelegram: ${tg}\nАдреса: ${address}\nКоментар: ${comment}\n\n`;
             let total = 0;
+
             cart.forEach(item => {
                 const sum = item.price * (item.qty || 1);
                 total += sum;
                 orderText += `${item.name} ${item.vol} × ${item.qty || 1} = ${sum} грн\n`;
             });
+
             orderText += `\nРазом: ${total} грн\nДоставка: безкоштовно`;
 
             fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ chat_id: CHAT_ID, text: orderText, parse_mode: "HTML" })
+                body: JSON.stringify({ chat_id: CHAT_ID, text: orderText })
             }).catch(() => {});
 
             setTimeout(() => window.location.href = "https://t.me/founderAD", 800);
         }
 
-        // Запуск
+        // Ініціалізація
         renderFilters();
         renderProducts();
         updateCartCount();
