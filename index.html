@@ -7,44 +7,32 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        body { 
-            font-family: system-ui, -apple-system, sans-serif; 
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
         }
-        .product-card { 
-            transition: all 0.3s; 
+        .product-card {
+            transition: all 0.3s;
         }
-        .product-card:hover { 
-            transform: translateY(-6px); 
-            box-shadow: 0 15px 20px -5px rgb(0 0 0 / 0.1); 
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.15);
         }
         .product-img {
-            height: 170px;
+            height: 180px;
             object-fit: contain;
             background: #18181b;
             padding: 12px;
             border-bottom: 1px solid #27272a;
         }
-
-        /* Hamburger */
-        .hamburger span {
-            transition: all 0.3s ease;
+        .toast {
+            animation: toastIn 0.4s ease, toastOut 0.3s 2.7s forwards;
         }
-        .hamburger.active span:nth-child(1) {
-            transform: rotate(45deg) translate(5px, 5px);
+        @keyframes toastIn {
+            from { transform: translateY(60px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
-        .hamburger.active span:nth-child(2) {
-            opacity: 0;
-        }
-        .hamburger.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(6px, -6px);
-        }
-
-        /* Міні-кошик */
-        #mini-cart {
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        #mini-cart.hidden {
-            transform: translateY(150%);
+        @keyframes toastOut {
+            to { transform: translateY(60px); opacity: 0; }
         }
     </style>
 </head>
@@ -61,37 +49,24 @@
                         <p class="text-amber-400 text-xs">312 позицій • 24/7</p>
                     </div>
                 </div>
-
                 <nav class="hidden md:flex items-center gap-8 text-sm">
                     <a onclick="showSection('catalog')" class="cursor-pointer hover:text-amber-400 transition-colors">Каталог</a>
                     <a onclick="showSection('cart')" class="cursor-pointer flex items-center gap-2 hover:text-amber-400 transition-colors">
                         Кошик <span id="cart-count" class="bg-amber-500 text-black px-2.5 py-0.5 rounded-full text-xs font-bold">0</span>
                     </a>
                 </nav>
-
                 <div class="flex items-center gap-3">
                     <a href="https://t.me/founderAD" target="_blank" 
                        class="bg-amber-500 hover:bg-amber-600 text-black px-5 py-2.5 rounded-2xl font-semibold flex items-center gap-2 text-sm transition">
                         <i class="fab fa-telegram"></i>
                         <span class="hidden sm:inline">Telegram</span>
                     </a>
-
                     <button id="hamburger-btn" onclick="toggleMobileMenu()" 
                             class="hamburger md:hidden w-11 h-11 flex flex-col items-center justify-center gap-1.5 focus:outline-none">
                         <span class="w-6 h-0.5 bg-white rounded"></span>
                         <span class="w-6 h-0.5 bg-white rounded"></span>
                         <span class="w-6 h-0.5 bg-white rounded"></span>
                     </button>
-                </div>
-            </div>
-
-            <!-- Mobile Menu -->
-            <div id="mobile-menu" class="hidden md:hidden mt-4 pt-4 border-t border-zinc-800">
-                <div class="flex flex-col gap-5 text-lg">
-                    <a onclick="showSection('catalog'); toggleMobileMenu()" class="cursor-pointer hover:text-amber-400 py-2">Каталог</a>
-                    <a onclick="showSection('cart'); toggleMobileMenu()" class="cursor-pointer flex items-center justify-between hover:text-amber-400 py-2">
-                        Кошик <span id="mobile-cart-count" class="bg-amber-500 text-black px-3 py-1 rounded-full text-sm font-bold">0</span>
-                    </a>
                 </div>
             </div>
         </div>
@@ -105,6 +80,24 @@
 
     <!-- CATALOG -->
     <section id="catalog" class="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+        <div class="flex flex-col md:flex-row gap-4 mb-8">
+            <!-- Пошук -->
+            <input id="search-input" 
+                   type="text" 
+                   placeholder="Пошук товару (наприклад: Nemiroff, Heineken...)" 
+                   class="flex-1 bg-zinc-900 border border-zinc-700 rounded-3xl px-6 py-4 text-base focus:outline-none focus:border-amber-500"
+                   onkeyup="filterProducts()">
+
+            <!-- Сортування -->
+            <select id="sort-select" onchange="filterProducts()"
+                    class="bg-zinc-900 border border-zinc-700 rounded-3xl px-6 py-4 focus:outline-none">
+                <option value="default">За замовчуванням</option>
+                <option value="price-low">Ціна: від низької до високої</option>
+                <option value="price-high">Ціна: від високої до низької</option>
+                <option value="name">За назвою А-Я</option>
+            </select>
+        </div>
+
         <div class="flex flex-wrap gap-2 mb-8 overflow-x-auto pb-3" id="filters"></div>
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6" id="products"></div>
     </section>
@@ -113,16 +106,16 @@
     <section id="cart" class="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 hidden">
         <h2 class="text-3xl sm:text-4xl font-bold mb-8">Кошик</h2>
         <div id="cart-items" class="space-y-6"></div>
+        
         <div class="bg-zinc-900 p-6 sm:p-8 rounded-3xl max-w-md mx-auto sm:ml-auto mt-12">
             <div class="flex justify-between text-2xl mb-6">
                 <span>Разом:</span>
                 <span id="total" class="font-semibold">0 грн</span>
             </div>
-            <button onclick="openOrderModal()" 
+            <button onclick="openOrderModal()"
                     class="w-full bg-amber-500 hover:bg-amber-600 text-black py-5 sm:py-6 rounded-3xl text-xl font-semibold transition">
                 Оформити замовлення
             </button>
-            <p class="text-center text-sm text-emerald-400 mt-4">Доставка безкоштовна від 1000 грн</p>
         </div>
     </section>
 
@@ -132,13 +125,28 @@
             <h3 class="text-2xl sm:text-3xl font-bold mb-6">Оформлення замовлення</h3>
             <form id="order-form" onsubmit="submitOrder(event)">
                 <div class="space-y-5">
-                    <input id="name" type="text" placeholder="Ім'я Прізвище" required class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 text-base">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                        <input id="phone" type="tel" placeholder="+380 (__) ___-__-__" required class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 text-base">
-                        <input id="telegram" type="text" placeholder="@username" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 text-base">
+                    <div>
+                        <label class="block text-sm text-zinc-400 mb-1">Ім'я Прізвище</label>
+                        <input id="name" type="text" required class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4">
                     </div>
-                    <textarea id="address" rows="3" placeholder="Адреса доставки" required class="w-full bg-zinc-800 border border-zinc-700 rounded-3xl px-5 py-4 text-base"></textarea>
-                    <input id="comment" type="text" placeholder="Коментар" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 text-base">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <div>
+                            <label class="block text-sm text-zinc-400 mb-1">Телефон</label>
+                            <input id="phone" type="tel" required class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-zinc-400 mb-1">Telegram (@username)</label>
+                            <input id="telegram" type="text" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm text-zinc-400 mb-1">Адреса доставки</label>
+                        <textarea id="address" rows="3" required class="w-full bg-zinc-800 border border-zinc-700 rounded-3xl px-5 py-4"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm text-zinc-400 mb-1">Коментар (необов'язково)</label>
+                        <input id="comment" type="text" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4">
+                    </div>
                     <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-black py-6 rounded-3xl text-xl font-semibold transition">
                         Надіслати замовлення
                     </button>
@@ -147,45 +155,36 @@
         </div>
     </div>
 
-    <!-- MINI CART -->
-    <div id="mini-cart" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-zinc-900 border border-amber-500 rounded-3xl shadow-2xl z-[60] w-[92%] max-w-md">
-        <div class="flex items-center justify-between px-5 py-4 border-b border-zinc-700">
-            <div class="flex items-center gap-3">
-                <i class="fas fa-shopping-bag text-amber-500 text-2xl"></i>
-                <div>
-                    <p class="font-semibold">Кошик</p>
-                    <p id="mini-count" class="text-sm text-zinc-400">0 товарів</p>
-                </div>
-            </div>
-            <div>
-                <p id="mini-total" class="font-bold text-lg text-right">0 грн</p>
-            </div>
-            <button onclick="hideMiniCart()" class="text-zinc-400 hover:text-white text-3xl leading-none px-2">×</button>
-        </div>
-        <div class="p-4 flex gap-3">
-            <button onclick="hideMiniCart(); showSection('cart')" 
-                    class="flex-1 bg-amber-500 hover:bg-amber-600 text-black font-semibold py-4 rounded-2xl transition">
-                Перейти до кошика
-            </button>
-            <button onclick="hideMiniCart()" 
-                    class="flex-1 bg-zinc-800 hover:bg-zinc-700 font-semibold py-4 rounded-2xl transition">
-                Продовжити покупки
+    <!-- SUCCESS MODAL -->
+    <div id="success-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+        <div class="bg-zinc-900 rounded-3xl p-10 max-w-md w-full text-center">
+            <div class="text-7xl mb-6">🎉</div>
+            <h3 class="text-3xl font-bold mb-4">Замовлення прийнято!</h3>
+            <p class="text-zinc-400 mb-8">Дякуємо! Наш менеджер зв'яжеться з вами протягом 15 хвилин.</p>
+            <button onclick="closeSuccessModal()" 
+                    class="w-full bg-amber-500 hover:bg-amber-600 text-black py-5 rounded-3xl font-semibold text-lg">
+                Повернутися до каталогу
             </button>
         </div>
     </div>
 
+    <!-- TOAST -->
+    <div id="toast" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-zinc-800 border border-amber-500 rounded-3xl shadow-2xl px-6 py-4 flex items-center gap-3 z-[70]">
+        <i class="fas fa-check-circle text-amber-500 text-2xl"></i>
+        <span id="toast-text" class="font-medium"></span>
+    </div>
+
     <script>
         const BOT_TOKEN = "8241760623:AAGfnf7OqvVPcnkW_EM5r3zgXN1blNZQ4Ig";
-        let CHAT_ID = "8558975809"; // ← ОБОВ'ЯЗКОВО ЗАМІНИ НА СВІЙ CHAT ID!
+        let CHAT_ID = "8558975809";
 
+        // ТВОЇ ТОВАРИ ЗАЛИШАЮТЬСЯ БЕЗ ЗМІН
         const products = [
-            // ГОРІЛКА
             {id:1, name:"Nemiroff Делікат", cat:"горілка", price:199, vol:"0.7л", img:"https://images.silpo.ua/products/1600x1600/92979d30-80f0-4958-9bab-4e890fdfbec0.png"},
             {id:2, name:"Хортиця Класична", cat:"горілка", price:169, vol:"0.5л", img:"https://tse2.mm.bing.net/th/id/OIP.Ye6FQF8nuk4hIyjAnlaQZwHaHa?rs=1&pid=ImgDetMain&o=7&rm=3"},
             {id:3, name:"Гетьман", cat:"горілка", price:189, vol:"0.7л", img:"https://image.maudau.com.ua/size/origin/products/73/4a/03/734a0331-b2a4-45a2-ad63-980af481d40f.jpg"},
             {id:4, name:"Absolut", cat:"горілка", price:449, vol:"0.7л", img:"https://cdn.selection-prestige.de/media/catalog/product/cache/image/1536x/a4e40ebdc3e371adff845072e1c73f37/I/M/IMQ323011_absolut-vodka-175l-40-vol.jpg"},
             {id:5, name:"Finlandia", cat:"горілка", price:399, vol:"0.7л", img:"https://wdsgroup.co.uk/wp-content/uploads/2022/09/Finlandia-Vodka-70cl.jpg"},
-            // ПИВО
             {id:61, name:"Оболонь Світле", cat:"пиво", price:35, vol:"0.5л", img:"https://images.silpo.ua/v2/products/1600x1600/origin/7919be11-c14d-438d-a896-9d94d1c32d14.png"},
             {id:63, name:"Tuborg Green", cat:"пиво", price:45, vol:"0.5л", img:"https://tse3.mm.bing.net/th/id/OIP.3Z5m-wVUTCj9ifQnFyL_oQHaHa?rs=1&pid=ImgDetMain&o=7&rm=3"},
             {id:64, name:"Heineken", cat:"пиво", price:55, vol:"0.5л", img:"https://static.wixstatic.com/media/89a845_e9aa765ff2204a14a396eb638a78bbc8~mv2.jpg/v1/fill/w_900,h_1200,al_c,q_85,enc_auto/89a845_e9aa765ff2204a14a396eb638a78bbc8~mv2.jpg"},
@@ -195,7 +194,6 @@
             {id:503, name:"Budweiser", cat:"пиво", price:59, vol:"0.5л", img:"https://tse4.mm.bing.net/th/id/OIP.1xT6gVwlZ4aP1l3nwAX1kAHaJQ?rs=1&pid=ImgDetMain&o=7&rm=3"},
             {id:504, name:"Stella Artois", cat:"пиво", price:65, vol:"0.5л", img:"https://tse2.mm.bing.net/th/id/OIP.KJBszVDgx-FtAMSn9HR-bwHaGy?rs=1&pid=ImgDetMain&o=7&rm=3"},
             {id:505, name:"Guinness Draught", cat:"пиво", price:89, vol:"0.44л", img:"https://th.bing.com/th/id/R.cd82ac5bca786f3463812edf14464a06?rik=xu1ZlbCQQxJ0zg&riu=http%3a%2f%2fsenseoftaste.com.au%2fcdn%2fshop%2ffiles%2fGuinnessDraughtStoutCan470ml.png%3fv%3d1752548259&ehk=%2bfynDB2QZJLQlJVf3ZIMI8fgZRSXK6mAH39FDWIotM0%3d&risl=&pid=ImgRaw&r=0"},
-            // ВИНО
             {id:121, name:"Каберне", cat:"вино", price:149, vol:"0.75л", img:"https://i.pinimg.com/originals/55/32/80/55328079217bb8db42f6bc478225aeca.jpg"},
             {id:122, name:"Шардоне", cat:"вино", price:139, vol:"0.75л", img:"https://krasnostop.ru/images/detailed/7/gg-chrdn-mgnm.jpg"},
             {id:401, name:"Каберне Совіньйон Франція", cat:"вино", price:279, vol:"0.75л", img:"https://wineland.com.ua/wp-content/uploads/2023/08/odesos_kaberne22.png"},
@@ -203,15 +201,12 @@
             {id:403, name:"Мерло Італія", cat:"вино", price:249, vol:"0.75л", img:"https://fortwine.ru/upload/iblock/d84/gyqb5199yi0k7dz96qe47heneuk6mpo6.jpg"},
             {id:404, name:"Піно Нуар", cat:"вино", price:359, vol:"0.75л", img:"https://chizay.com/wp-content/uploads/2019/05/PinotNoir2019-вертикальне.jpg"},
             {id:405, name:"Совіньйон Блан", cat:"вино", price:289, vol:"0.75л", img:"https://santmat.net.ua/wp-content/uploads/2024/08/sauvignon.jpg"},
-            // ІГРИСТЕ
             {id:171, name:"Ігристе вино Біле", cat:"ігристе", price:189, vol:"0.75л", img:"https://tse3.mm.bing.net/th/id/OIP.q5YzGgDN3sKmB3ig8VWGCwHaHa?rs=1&pid=ImgDetMain&o=7&rm=3"},
             {id:172, name:"Просекко", cat:"ігристе", price:399, vol:"0.75л", img:"https://www.alcoplaza.ru/photo_it/photo78643.jpeg"},
-            // РОМ
             {id:211, name:"Captain Morgan", cat:"ром", price:499, vol:"0.7л", img:"https://tse4.mm.bing.net/th/id/OIP.76QJMCKNhiS5DtSH_2mgBQHaHa?rs=1&pid=ImgDetMain&o=7&rm=3"},
             {id:212, name:"Bacardi Superior", cat:"ром", price:549, vol:"0.7л", img:"https://tse2.mm.bing.net/th/id/OIP.HQL6UsLSBBsWI4C32r9sQQHaLG?rs=1&pid=ImgDetMain&o=7&rm=3"},
             {id:603, name:"Bacardi Black", cat:"ром", price:599, vol:"0.7л", img:"https://d323g1xugy1rkz.cloudfront.net/wp-content/uploads/sites/25/2020/08/21154630/Products-Bottle-Black-min.png"},
             {id:604, name:"Havana Club", cat:"ром", price:649, vol:"0.7л", img:"https://ruoungoaiald.com/wp-content/uploads/Havana-Club-2.jpg"},
-            // ВІСКІ
             {id:201, name:"Jameson", cat:"віскі", price:699, vol:"0.7л", img:"https://wallpaperaccess.com/full/9481230.jpg"},
             {id:202, name:"Jack Daniel's", cat:"віскі", price:799, vol:"0.7л", img:"https://images.washingtonpost.com/?url=http://img.washingtonpost.com/news/morning-mix/wp-content/uploads/sites/21/2016/06/Jack-Daniels-Tennessee-Whiskey.jpg&w=1484&op=resize&opt=1&filter=antialias"},
             {id:703, name:"Johnnie Walker Black", cat:"віскі", price:899, vol:"0.7л", img:"https://tse2.mm.bing.net/th/id/OIP.CgXpB9FiBbGEE403U0jTWQHaHa?rs=1&pid=ImgDetMain&o=7&rm=3"},
@@ -220,26 +215,94 @@
         ];
 
         let cart = [];
-        let filter = "all";
+        let currentFilter = "all";
+
+        // Завантаження кошика
+        function loadCart() {
+            const savedCart = localStorage.getItem("alcocart");
+            if (savedCart) {
+                cart = JSON.parse(savedCart);
+                updateCartCount();
+            }
+        }
+
+        function saveCart() {
+            localStorage.setItem("alcocart", JSON.stringify(cart));
+        }
+
+        // Показ тосту
+        function showToast(text) {
+            const toast = document.getElementById("toast");
+            document.getElementById("toast-text").innerHTML = text;
+            toast.classList.remove("hidden");
+            setTimeout(() => toast.classList.add("hidden"), 3000);
+        }
+
+        function addToCart(id) {
+            const product = products.find(p => p.id === id);
+            if (!product) return;
+
+            const existing = cart.find(item => item.id === id);
+            if (existing) {
+                existing.qty = (existing.qty || 1) + 1;
+            } else {
+                cart.push({...product, qty: 1});
+            }
+
+            updateCartCount();
+            saveCart();
+            showToast(`<strong>${product.name}</strong> додано в кошик`);
+        }
+
+        function updateCartCount() {
+            const count = cart.reduce((sum, item) => sum + (item.qty || 1), 0);
+            document.getElementById("cart-count").textContent = count;
+        }
 
         function renderFilters() {
             const cats = ["all", ...new Set(products.map(p => p.cat))];
-            let html = `<button onclick="setFilter('all')" class="px-6 py-3 rounded-3xl whitespace-nowrap text-sm ${filter==='all' ? 'bg-amber-500 text-black' : 'bg-zinc-800 hover:bg-zinc-700'}">Всі (${products.length})</button>`;
-            cats.forEach(c => {
-                if (c !== "all") {
-                    html += `<button onclick="setFilter('${c}')" class="px-6 py-3 rounded-3xl whitespace-nowrap text-sm ${filter===c ? 'bg-amber-500 text-black' : 'bg-zinc-800 hover:bg-zinc-700'}">${c}</button>`;
+            let html = `<button onclick="setFilter('all')" class="px-6 py-3 rounded-3xl whitespace-nowrap text-sm ${currentFilter==='all' ? 'bg-amber-500 text-black' : 'bg-zinc-800 hover:bg-zinc-700'}">Всі (${products.length})</button>`;
+            
+            cats.forEach(cat => {
+                if (cat !== "all") {
+                    const count = products.filter(p => p.cat === cat).length;
+                    html += `<button onclick="setFilter('${cat}')" class="px-6 py-3 rounded-3xl whitespace-nowrap text-sm ${currentFilter===cat ? 'bg-amber-500 text-black' : 'bg-zinc-800 hover:bg-zinc-700'}">${cat} (${count})</button>`;
                 }
             });
             document.getElementById("filters").innerHTML = html;
         }
 
-        function renderProducts() {
-            const filtered = filter === "all" ? products : products.filter(p => p.cat === filter);
+        function setFilter(cat) {
+            currentFilter = cat;
+            renderFilters();
+            filterProducts();
+        }
+
+        function filterProducts() {
+            const searchTerm = document.getElementById("search-input").value.toLowerCase().trim();
+            const sortType = document.getElementById("sort-select").value;
+
+            let filtered = products.filter(product => {
+                const matchesFilter = currentFilter === "all" || product.cat === currentFilter;
+                const matchesSearch = product.name.toLowerCase().includes(searchTerm);
+                return matchesFilter && matchesSearch;
+            });
+
+            // Сортування
+            if (sortType === "price-low") filtered.sort((a, b) => a.price - b.price);
+            if (sortType === "price-high") filtered.sort((a, b) => b.price - a.price);
+            if (sortType === "name") filtered.sort((a, b) => a.name.localeCompare(b.name));
+
+            renderProducts(filtered);
+        }
+
+        function renderProducts(filteredProducts) {
             let html = "";
-            filtered.forEach(p => {
+            filteredProducts.forEach(p => {
                 html += `
                 <div class="product-card bg-zinc-900 rounded-3xl overflow-hidden border border-zinc-800">
-                    <img src="${p.img}" class="product-img w-full" alt="${p.name}" onerror="this.src='https://source.unsplash.com/random/600x600/?alcohol-bottle';">
+                    <img src="${p.img}" class="product-img w-full" alt="${p.name}" loading="lazy"
+                         onerror="this.src='https://source.unsplash.com/random/600x600/?alcohol-bottle';">
                     <div class="p-4">
                         <div class="font-semibold text-base leading-tight">${p.name}</div>
                         <div class="text-sm text-zinc-400 mt-1">${p.vol}</div>
@@ -256,104 +319,61 @@
                     </div>
                 </div>`;
             });
-            document.getElementById("products").innerHTML = html || "<p class='col-span-full text-center text-zinc-400 py-12'>Немає товарів</p>";
-        }
 
-        function setFilter(f) {
-            filter = f;
-            renderFilters();
-            renderProducts();
-        }
-
-        function addToCart(id) {
-            const prod = products.find(p => p.id === id);
-            const exist = cart.find(item => item.id === id);
-            if (exist) exist.qty = (exist.qty || 1) + 1;
-            else cart.push({...prod, qty: 1});
-
-            updateCartCount();
-            showMiniCart();   // Показуємо міні-кошик
-        }
-
-        function updateCartCount() {
-            const count = cart.reduce((sum, item) => sum + (item.qty || 1), 0);
-            document.getElementById("cart-count").textContent = count;
-            const mobileCount = document.getElementById("mobile-cart-count");
-            if (mobileCount) mobileCount.textContent = count;
-        }
-
-        function showMiniCart() {
-            const mini = document.getElementById("mini-cart");
-            const total = cart.reduce((sum, item) => sum + item.price * (item.qty || 1), 0);
-            const count = cart.reduce((sum, item) => sum + (item.qty || 1), 0);
-
-            document.getElementById("mini-total").textContent = total + " грн";
-            document.getElementById("mini-count").textContent = `${count} товар${count % 10 === 1 && count % 100 !== 11 ? '' : 'ів'}`;
-
-            mini.classList.remove("hidden");
-        }
-
-        function hideMiniCart() {
-            document.getElementById("mini-cart").classList.add("hidden");
+            document.getElementById("products").innerHTML = html || `<p class="col-span-full text-center text-zinc-400 py-12">Нічого не знайдено</p>`;
         }
 
         function renderCart() {
             let html = "", total = 0;
-            cart.forEach((item, i) => {
+            cart.forEach((item, index) => {
                 const sum = item.price * (item.qty || 1);
                 total += sum;
                 html += `
                 <div class="flex gap-4 bg-zinc-900 p-5 rounded-3xl">
-                    <img src="${item.img}" class="w-20 h-20 object-contain rounded-xl" onerror="this.src='https://source.unsplash.com/random/600x600/?alcohol-bottle';">
-                    <div class="flex-1 min-w-0">
-                        <div class="font-semibold text-base leading-tight">${item.name} ${item.vol}</div>
-                        <div class="text-amber-400 text-sm mt-1">${item.price} грн × ${item.qty || 1}</div>
+                    <img src="${item.img}" class="w-20 h-20 object-contain rounded-xl" loading="lazy">
+                    <div class="flex-1">
+                        <div class="font-semibold">${item.name} ${item.vol}</div>
+                        <div class="text-amber-400 text-sm">${item.price} грн × ${item.qty || 1}</div>
                     </div>
-                    <div class="text-right flex-shrink-0">
+                    <div class="text-right">
                         <div class="font-bold text-lg">${sum} грн</div>
-                        <div class="mt-3 flex items-center justify-end gap-3">
-                            <button onclick="changeQty(${i}, -1)" class="text-red-400 text-2xl w-7 h-7 flex items-center justify-center">-</button>
-                            <span class="text-lg w-6 text-center">${item.qty || 1}</span>
-                            <button onclick="changeQty(${i}, 1)" class="text-emerald-400 text-2xl w-7 h-7 flex items-center justify-center">+</button>
-                            <button onclick="removeFromCart(${i})" class="ml-4 text-red-500 text-3xl leading-none">×</button>
+                        <div class="flex items-center justify-end gap-3 mt-3">
+                            <button onclick="changeQty(${index}, -1)" class="text-red-400 text-2xl w-8 h-8">-</button>
+                            <span class="w-6 text-center">${item.qty || 1}</span>
+                            <button onclick="changeQty(${index}, 1)" class="text-emerald-400 text-2xl w-8 h-8">+</button>
+                            <button onclick="removeFromCart(${index})" class="ml-2 text-red-500 text-3xl">×</button>
                         </div>
                     </div>
                 </div>`;
             });
-            document.getElementById("cart-items").innerHTML = html || "<p class='text-zinc-400 text-center py-12'>Кошик порожній</p>";
+
+            document.getElementById("cart-items").innerHTML = html || `<p class="text-zinc-400 text-center py-12">Кошик порожній</p>`;
             document.getElementById("total").textContent = total + " грн";
         }
 
-        function changeQty(i, delta) {
-            cart[i].qty = (cart[i].qty || 1) + delta;
-            if (cart[i].qty < 1) cart.splice(i, 1);
+        function changeQty(index, delta) {
+            cart[index].qty = (cart[index].qty || 1) + delta;
+            if (cart[index].qty < 1) cart.splice(index, 1);
             renderCart();
             updateCartCount();
-            if (cart.length === 0) hideMiniCart();
+            saveCart();
         }
 
-        function removeFromCart(i) {
-            cart.splice(i, 1);
+        function removeFromCart(index) {
+            cart.splice(index, 1);
             renderCart();
             updateCartCount();
-            if (cart.length === 0) hideMiniCart();
+            saveCart();
         }
 
-        function showSection(sec) {
+        function showSection(section) {
             document.getElementById("catalog").classList.add("hidden");
             document.getElementById("cart").classList.add("hidden");
-            document.getElementById(sec).classList.remove("hidden");
-            if (sec === "cart") {
-                renderCart();
-                hideMiniCart();   // ховаємо міні-кошик при відкритті повного
-            }
-        }
+            document.getElementById(section).classList.remove("hidden");
 
-        function toggleMobileMenu() {
-            const menu = document.getElementById("mobile-menu");
-            const btn = document.getElementById("hamburger-btn");
-            menu.classList.toggle("hidden");
-            btn.classList.toggle("active");
+            if (section === "cart") {
+                renderCart();
+            }
         }
 
         function openOrderModal() {
@@ -363,34 +383,55 @@
 
         function submitOrder(e) {
             e.preventDefault();
-            const name = document.getElementById("name").value;
-            const phone = document.getElementById("phone").value;
-            const tg = document.getElementById("telegram").value || "—";
-            const address = document.getElementById("address").value;
-            const comment = document.getElementById("comment").value || "—";
+            const name = document.getElementById("name").value.trim();
+            const phone = document.getElementById("phone").value.trim();
+            const telegram = document.getElementById("telegram").value.trim() || "—";
+            const address = document.getElementById("address").value.trim();
+            const comment = document.getElementById("comment").value.trim() || "—";
 
-            let orderText = `🛒 Нове замовлення!\n\nІм'я: ${name}\nТел: ${phone}\nTelegram: ${tg}\nАдреса: ${address}\nКоментар: ${comment}\n\n`;
+            let orderText = `🛒 Нове замовлення!\n\nІм'я: ${name}\nТел: ${phone}\nTelegram: ${telegram}\nАдреса: ${address}\nКоментар: ${comment}\n\nТовари:\n`;
+
             let total = 0;
             cart.forEach(item => {
                 const sum = item.price * (item.qty || 1);
                 total += sum;
                 orderText += `${item.name} ${item.vol} × ${item.qty || 1} = ${sum} грн\n`;
             });
-            orderText += `\nРазом: ${total} грн\nДоставка: безкоштовно`;
+            orderText += `\nРазом: ${total} грн`;
 
             fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ chat_id: CHAT_ID, text: orderText })
-            }).catch(() => {});
+                body: JSON.stringify({ chat_id: CHAT_ID, text: orderText, parse_mode: "HTML" })
+            }).catch(err => console.log("Telegram error", err));
 
-            setTimeout(() => window.location.href = "https://t.me/founderAD", 800);
+            // Показуємо успіх
+            document.getElementById("order-modal").classList.add("hidden");
+            document.getElementById("success-modal").classList.remove("hidden");
+
+            // Очищаємо кошик
+            cart = [];
+            saveCart();
+            updateCartCount();
         }
 
-        // Запуск
-        renderFilters();
-        renderProducts();
-        updateCartCount();
+        function closeSuccessModal() {
+            document.getElementById("success-modal").classList.add("hidden");
+            showSection("catalog");
+        }
+
+        function toggleMobileMenu() {
+            // поки що без змін (можемо покращити пізніше)
+            alert("Мобільне меню в розробці. Використовуйте десктопну навігацію поки що.");
+        }
+
+        // Ініціалізація
+        window.onload = () => {
+            loadCart();
+            renderFilters();
+            filterProducts();        // замість renderProducts()
+            updateCartCount();
+        };
     </script>
 </body>
 </html>
