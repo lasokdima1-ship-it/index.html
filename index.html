@@ -7,33 +7,13 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        body {
-            font-family: system-ui, -apple-system, sans-serif;
-        }
-        .product-card {
-            transition: all 0.3s;
-        }
-        .product-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.15);
-        }
-        .product-img {
-            height: 180px;
-            object-fit: contain;
-            background: #18181b;
-            padding: 12px;
-            border-bottom: 1px solid #27272a;
-        }
-        .toast {
-            animation: toastIn 0.4s ease, toastOut 0.3s 2.7s forwards;
-        }
-        @keyframes toastIn {
-            from { transform: translateY(60px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        @keyframes toastOut {
-            to { transform: translateY(60px); opacity: 0; }
-        }
+        body { font-family: system-ui, -apple-system, sans-serif; }
+        .product-card { transition: all 0.3s; }
+        .product-card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.15); }
+        .product-img { height: 180px; object-fit: contain; background: #18181b; padding: 12px; }
+        .toast { animation: toastIn 0.4s ease, toastOut 0.3s 2.7s forwards; }
+        @keyframes toastIn { from { transform: translateY(60px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes toastOut { to { transform: translateY(60px); opacity: 0; } }
     </style>
 </head>
 <body class="bg-zinc-950 text-white">
@@ -49,71 +29,78 @@
                         <p class="text-amber-400 text-xs">312 позицій • 24/7</p>
                     </div>
                 </div>
+
                 <nav class="hidden md:flex items-center gap-8 text-sm">
-                    <a onclick="showSection('catalog')" class="cursor-pointer hover:text-amber-400 transition-colors">Каталог</a>
-                    <a onclick="showSection('cart')" class="cursor-pointer flex items-center gap-2 hover:text-amber-400 transition-colors">
+                    <a onclick="showSection('catalog')" class="cursor-pointer hover:text-amber-400">Каталог</a>
+                    <a onclick="showSection('cart')" class="cursor-pointer flex items-center gap-2 hover:text-amber-400">
                         Кошик <span id="cart-count" class="bg-amber-500 text-black px-2.5 py-0.5 rounded-full text-xs font-bold">0</span>
                     </a>
                 </nav>
+
                 <div class="flex items-center gap-3">
                     <a href="https://t.me/founderAD" target="_blank" 
-                       class="bg-amber-500 hover:bg-amber-600 text-black px-5 py-2.5 rounded-2xl font-semibold flex items-center gap-2 text-sm transition">
-                        <i class="fab fa-telegram"></i>
-                        <span class="hidden sm:inline">Telegram</span>
+                       class="bg-amber-500 hover:bg-amber-600 text-black px-5 py-2.5 rounded-2xl font-semibold flex items-center gap-2">
+                        <i class="fab fa-telegram"></i> Telegram
                     </a>
-                    <button id="hamburger-btn" onclick="toggleMobileMenu()" 
-                            class="hamburger md:hidden w-11 h-11 flex flex-col items-center justify-center gap-1.5 focus:outline-none">
-                        <span class="w-6 h-0.5 bg-white rounded"></span>
-                        <span class="w-6 h-0.5 bg-white rounded"></span>
-                        <span class="w-6 h-0.5 bg-white rounded"></span>
+                    <button onclick="toggleMobileMenu()" 
+                            class="md:hidden w-11 h-11 flex flex-col items-center justify-center gap-1.5">
+                        <span class="w-6 h-0.5 bg-white rounded block"></span>
+                        <span class="w-6 h-0.5 bg-white rounded block"></span>
+                        <span class="w-6 h-0.5 bg-white rounded block"></span>
                     </button>
+                </div>
+            </div>
+
+            <!-- MOBILE MENU -->
+            <div id="mobile-menu" class="hidden md:hidden mt-4 pt-4 border-t border-zinc-800">
+                <div class="flex flex-col gap-5 text-lg">
+                    <a onclick="showSection('catalog'); toggleMobileMenu()" class="cursor-pointer hover:text-amber-400 py-2">Каталог</a>
+                    <a onclick="showSection('cart'); toggleMobileMenu()" class="cursor-pointer flex items-center justify-between hover:text-amber-400 py-2">
+                        Кошик <span id="mobile-cart-count" class="bg-amber-500 text-black px-3 py-1 rounded-full text-sm font-bold">0</span>
+                    </a>
                 </div>
             </div>
         </div>
     </header>
 
     <!-- HERO -->
-    <div class="bg-gradient-to-br from-zinc-900 to-black py-12 sm:py-16 text-center px-4">
-        <h2 class="text-4xl sm:text-5xl font-bold tracking-tight">Доставимо навіть уночі</h2>
-        <p class="mt-3 text-lg sm:text-2xl text-zinc-400">312 позицій алкоголю • Доставка 24/7</p>
+    <div class="bg-gradient-to-br from-zinc-900 to-black py-16 text-center px-4">
+        <h2 class="text-4xl sm:text-5xl font-bold">Доставимо навіть уночі</h2>
+        <p class="mt-3 text-xl text-zinc-400">312 позицій алкоголю • Доставка 24/7</p>
     </div>
 
     <!-- CATALOG -->
-    <section id="catalog" class="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
-        <div class="flex flex-col md:flex-row gap-4 mb-8">
-            <!-- Пошук -->
-            <input id="search-input" 
-                   type="text" 
-                   placeholder="Пошук товару (наприклад: Nemiroff, Heineken...)" 
-                   class="flex-1 bg-zinc-900 border border-zinc-700 rounded-3xl px-6 py-4 text-base focus:outline-none focus:border-amber-500"
+    <section id="catalog" class="max-w-7xl mx-auto px-4 py-10">
+        <div class="flex flex-col sm:flex-row gap-4 mb-8">
+            <input id="search-input" type="text" placeholder="Пошук товару..." 
+                   class="flex-1 bg-zinc-900 border border-zinc-700 rounded-3xl px-6 py-4 focus:outline-none focus:border-amber-500"
                    onkeyup="filterProducts()">
 
-            <!-- Сортування -->
-            <select id="sort-select" onchange="filterProducts()"
+            <select id="sort-select" onchange="filterProducts()" 
                     class="bg-zinc-900 border border-zinc-700 rounded-3xl px-6 py-4 focus:outline-none">
                 <option value="default">За замовчуванням</option>
-                <option value="price-low">Ціна: від низької до високої</option>
-                <option value="price-high">Ціна: від високої до низької</option>
+                <option value="price-low">Ціна: від низької</option>
+                <option value="price-high">Ціна: від високої</option>
                 <option value="name">За назвою А-Я</option>
             </select>
         </div>
 
-        <div class="flex flex-wrap gap-2 mb-8 overflow-x-auto pb-3" id="filters"></div>
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6" id="products"></div>
+        <div class="flex flex-wrap gap-2 mb-8 overflow-x-auto" id="filters"></div>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6" id="products"></div>
     </section>
 
     <!-- CART -->
-    <section id="cart" class="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 hidden">
-        <h2 class="text-3xl sm:text-4xl font-bold mb-8">Кошик</h2>
+    <section id="cart" class="max-w-7xl mx-auto px-4 py-10 hidden">
+        <h2 class="text-4xl font-bold mb-8">Кошик</h2>
         <div id="cart-items" class="space-y-6"></div>
         
-        <div class="bg-zinc-900 p-6 sm:p-8 rounded-3xl max-w-md mx-auto sm:ml-auto mt-12">
+        <div class="mt-12 bg-zinc-900 p-8 rounded-3xl max-w-md ml-auto">
             <div class="flex justify-between text-2xl mb-6">
                 <span>Разом:</span>
                 <span id="total" class="font-semibold">0 грн</span>
             </div>
-            <button onclick="openOrderModal()"
-                    class="w-full bg-amber-500 hover:bg-amber-600 text-black py-5 sm:py-6 rounded-3xl text-xl font-semibold transition">
+            <button onclick="openOrderModal()" 
+                    class="w-full bg-amber-500 hover:bg-amber-600 text-black py-6 rounded-3xl text-xl font-semibold">
                 Оформити замовлення
             </button>
         </div>
@@ -121,33 +108,33 @@
 
     <!-- ORDER MODAL -->
     <div id="order-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-        <div class="bg-zinc-900 rounded-3xl p-6 sm:p-8 max-w-lg w-full">
-            <h3 class="text-2xl sm:text-3xl font-bold mb-6">Оформлення замовлення</h3>
+        <div class="bg-zinc-900 rounded-3xl p-8 max-w-lg w-full">
+            <h3 class="text-3xl font-bold mb-6">Оформлення замовлення</h3>
             <form id="order-form" onsubmit="submitOrder(event)">
                 <div class="space-y-5">
                     <div>
-                        <label class="block text-sm text-zinc-400 mb-1">Ім'я Прізвище</label>
+                        <label class="block text-sm mb-2 text-zinc-400">Ім'я Прізвище</label>
                         <input id="name" type="text" required class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4">
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                         <div>
-                            <label class="block text-sm text-zinc-400 mb-1">Телефон</label>
+                            <label class="block text-sm mb-2 text-zinc-400">Телефон</label>
                             <input id="phone" type="tel" required class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4">
                         </div>
                         <div>
-                            <label class="block text-sm text-zinc-400 mb-1">Telegram (@username)</label>
+                            <label class="block text-sm mb-2 text-zinc-400">Telegram (@username)</label>
                             <input id="telegram" type="text" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4">
                         </div>
                     </div>
                     <div>
-                        <label class="block text-sm text-zinc-400 mb-1">Адреса доставки</label>
+                        <label class="block text-sm mb-2 text-zinc-400">Адреса доставки</label>
                         <textarea id="address" rows="3" required class="w-full bg-zinc-800 border border-zinc-700 rounded-3xl px-5 py-4"></textarea>
                     </div>
                     <div>
-                        <label class="block text-sm text-zinc-400 mb-1">Коментар (необов'язково)</label>
+                        <label class="block text-sm mb-2 text-zinc-400">Коментар</label>
                         <input id="comment" type="text" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4">
                     </div>
-                    <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-black py-6 rounded-3xl text-xl font-semibold transition">
+                    <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-black py-6 rounded-3xl text-xl font-semibold">
                         Надіслати замовлення
                     </button>
                 </div>
@@ -160,7 +147,7 @@
         <div class="bg-zinc-900 rounded-3xl p-10 max-w-md w-full text-center">
             <div class="text-7xl mb-6">🎉</div>
             <h3 class="text-3xl font-bold mb-4">Замовлення прийнято!</h3>
-            <p class="text-zinc-400 mb-8">Дякуємо! Наш менеджер зв'яжеться з вами протягом 15 хвилин.</p>
+            <p class="text-zinc-400 mb-8">Дякуємо! Менеджер зв'яжеться з вами протягом 15 хвилин.</p>
             <button onclick="closeSuccessModal()" 
                     class="w-full bg-amber-500 hover:bg-amber-600 text-black py-5 rounded-3xl font-semibold text-lg">
                 Повернутися до каталогу
@@ -178,7 +165,7 @@
         const BOT_TOKEN = "8241760623:AAGfnf7OqvVPcnkW_EM5r3zgXN1blNZQ4Ig";
         let CHAT_ID = "8558975809";
 
-        // ТВОЇ ТОВАРИ ЗАЛИШАЮТЬСЯ БЕЗ ЗМІН
+        // ТВОЇ ТОВАРИ (без змін)
         const products = [
             {id:1, name:"Nemiroff Делікат", cat:"горілка", price:199, vol:"0.7л", img:"https://images.silpo.ua/products/1600x1600/92979d30-80f0-4958-9bab-4e890fdfbec0.png"},
             {id:2, name:"Хортиця Класична", cat:"горілка", price:169, vol:"0.5л", img:"https://tse2.mm.bing.net/th/id/OIP.Ye6FQF8nuk4hIyjAnlaQZwHaHa?rs=1&pid=ImgDetMain&o=7&rm=3"},
@@ -217,20 +204,24 @@
         let cart = [];
         let currentFilter = "all";
 
-        // Завантаження кошика
+        // LocalStorage
         function loadCart() {
-            const savedCart = localStorage.getItem("alcocart");
-            if (savedCart) {
-                cart = JSON.parse(savedCart);
-                updateCartCount();
-            }
+            const saved = localStorage.getItem("alcocart");
+            if (saved) cart = JSON.parse(saved);
         }
 
         function saveCart() {
             localStorage.setItem("alcocart", JSON.stringify(cart));
         }
 
-        // Показ тосту
+        function updateCartCount() {
+            const count = cart.reduce((sum, item) => sum + (item.qty || 1), 0);
+            document.getElementById("cart-count").textContent = count;
+            const mobile = document.getElementById("mobile-cart-count");
+            if (mobile) mobile.textContent = count;
+        }
+
+        // Toast
         function showToast(text) {
             const toast = document.getElementById("toast");
             document.getElementById("toast-text").innerHTML = text;
@@ -239,34 +230,24 @@
         }
 
         function addToCart(id) {
-            const product = products.find(p => p.id === id);
-            if (!product) return;
-
-            const existing = cart.find(item => item.id === id);
-            if (existing) {
-                existing.qty = (existing.qty || 1) + 1;
-            } else {
-                cart.push({...product, qty: 1});
-            }
+            const prod = products.find(p => p.id === id);
+            const exist = cart.find(item => item.id === id);
+            if (exist) exist.qty = (exist.qty || 1) + 1;
+            else cart.push({...prod, qty: 1});
 
             updateCartCount();
             saveCart();
-            showToast(`<strong>${product.name}</strong> додано в кошик`);
+            showToast(`✅ ${prod.name} додано в кошик`);
         }
 
-        function updateCartCount() {
-            const count = cart.reduce((sum, item) => sum + (item.qty || 1), 0);
-            document.getElementById("cart-count").textContent = count;
-        }
-
+        // Filters
         function renderFilters() {
             const cats = ["all", ...new Set(products.map(p => p.cat))];
-            let html = `<button onclick="setFilter('all')" class="px-6 py-3 rounded-3xl whitespace-nowrap text-sm ${currentFilter==='all' ? 'bg-amber-500 text-black' : 'bg-zinc-800 hover:bg-zinc-700'}">Всі (${products.length})</button>`;
-            
-            cats.forEach(cat => {
-                if (cat !== "all") {
-                    const count = products.filter(p => p.cat === cat).length;
-                    html += `<button onclick="setFilter('${cat}')" class="px-6 py-3 rounded-3xl whitespace-nowrap text-sm ${currentFilter===cat ? 'bg-amber-500 text-black' : 'bg-zinc-800 hover:bg-zinc-700'}">${cat} (${count})</button>`;
+            let html = `<button onclick="setFilter('all')" class="px-6 py-3 rounded-3xl text-sm ${currentFilter==='all' ? 'bg-amber-500 text-black' : 'bg-zinc-800 hover:bg-zinc-700'}">Всі (${products.length})</button>`;
+            cats.forEach(c => {
+                if (c !== "all") {
+                    const count = products.filter(p => p.cat === c).length;
+                    html += `<button onclick="setFilter('${c}')" class="px-6 py-3 rounded-3xl text-sm ${currentFilter===c ? 'bg-amber-500 text-black' : 'bg-zinc-800 hover:bg-zinc-700'}">${c} (${count})</button>`;
                 }
             });
             document.getElementById("filters").innerHTML = html;
@@ -278,54 +259,51 @@
             filterProducts();
         }
 
+        // Пошук + сортування + рендер продуктів
         function filterProducts() {
-            const searchTerm = document.getElementById("search-input").value.toLowerCase().trim();
+            const search = document.getElementById("search-input").value.toLowerCase().trim();
             const sortType = document.getElementById("sort-select").value;
 
-            let filtered = products.filter(product => {
-                const matchesFilter = currentFilter === "all" || product.cat === currentFilter;
-                const matchesSearch = product.name.toLowerCase().includes(searchTerm);
-                return matchesFilter && matchesSearch;
+            let filtered = products.filter(p => {
+                const matchCat = currentFilter === "all" || p.cat === currentFilter;
+                const matchSearch = p.name.toLowerCase().includes(search);
+                return matchCat && matchSearch;
             });
 
-            // Сортування
-            if (sortType === "price-low") filtered.sort((a, b) => a.price - b.price);
-            if (sortType === "price-high") filtered.sort((a, b) => b.price - a.price);
-            if (sortType === "name") filtered.sort((a, b) => a.name.localeCompare(b.name));
+            if (sortType === "price-low") filtered.sort((a,b) => a.price - b.price);
+            if (sortType === "price-high") filtered.sort((a,b) => b.price - a.price);
+            if (sortType === "name") filtered.sort((a,b) => a.name.localeCompare(b.name));
 
             renderProducts(filtered);
         }
 
-        function renderProducts(filteredProducts) {
+        function renderProducts(filtered) {
             let html = "";
-            filteredProducts.forEach(p => {
+            filtered.forEach(p => {
                 html += `
                 <div class="product-card bg-zinc-900 rounded-3xl overflow-hidden border border-zinc-800">
                     <img src="${p.img}" class="product-img w-full" alt="${p.name}" loading="lazy"
-                         onerror="this.src='https://source.unsplash.com/random/600x600/?alcohol-bottle';">
+                         onerror="this.src='https://source.unsplash.com/random/600x600/?alcohol';">
                     <div class="p-4">
-                        <div class="font-semibold text-base leading-tight">${p.name}</div>
+                        <div class="font-semibold text-base">${p.name}</div>
                         <div class="text-sm text-zinc-400 mt-1">${p.vol}</div>
-                        <div class="flex justify-between items-end mt-5">
-                            <div>
-                                <span class="text-2xl font-bold">${p.price}</span>
-                                <span class="text-sm text-zinc-400"> грн</span>
-                            </div>
+                        <div class="flex justify-between items-end mt-6">
+                            <div><span class="text-2xl font-bold">${p.price}</span><span class="text-sm text-zinc-400"> грн</span></div>
                             <button onclick="addToCart(${p.id}); event.stopImmediatePropagation()" 
-                                    class="bg-amber-500 hover:bg-amber-600 text-black px-5 py-2.5 rounded-2xl text-sm font-semibold transition">
+                                    class="bg-amber-500 hover:bg-amber-600 text-black px-5 py-2.5 rounded-2xl text-sm font-semibold">
                                 В кошик
                             </button>
                         </div>
                     </div>
                 </div>`;
             });
-
             document.getElementById("products").innerHTML = html || `<p class="col-span-full text-center text-zinc-400 py-12">Нічого не знайдено</p>`;
         }
 
+        // Кошик
         function renderCart() {
             let html = "", total = 0;
-            cart.forEach((item, index) => {
+            cart.forEach((item, i) => {
                 const sum = item.price * (item.qty || 1);
                 total += sum;
                 html += `
@@ -337,79 +315,76 @@
                     </div>
                     <div class="text-right">
                         <div class="font-bold text-lg">${sum} грн</div>
-                        <div class="flex items-center justify-end gap-3 mt-3">
-                            <button onclick="changeQty(${index}, -1)" class="text-red-400 text-2xl w-8 h-8">-</button>
-                            <span class="w-6 text-center">${item.qty || 1}</span>
-                            <button onclick="changeQty(${index}, 1)" class="text-emerald-400 text-2xl w-8 h-8">+</button>
-                            <button onclick="removeFromCart(${index})" class="ml-2 text-red-500 text-3xl">×</button>
+                        <div class="mt-4 flex items-center gap-3">
+                            <button onclick="changeQty(${i}, -1)" class="text-red-400 text-2xl w-8 h-8">-</button>
+                            <span class="text-lg w-6 text-center">${item.qty || 1}</span>
+                            <button onclick="changeQty(${i}, 1)" class="text-emerald-400 text-2xl w-8 h-8">+</button>
+                            <button onclick="removeFromCart(${i})" class="ml-4 text-red-500 text-3xl">×</button>
                         </div>
                     </div>
                 </div>`;
             });
-
-            document.getElementById("cart-items").innerHTML = html || `<p class="text-zinc-400 text-center py-12">Кошик порожній</p>`;
+            document.getElementById("cart-items").innerHTML = html || `<p class="text-zinc-400 text-center py-20">Кошик порожній</p>`;
             document.getElementById("total").textContent = total + " грн";
         }
 
-        function changeQty(index, delta) {
-            cart[index].qty = (cart[index].qty || 1) + delta;
-            if (cart[index].qty < 1) cart.splice(index, 1);
+        function changeQty(i, delta) {
+            cart[i].qty = (cart[i].qty || 1) + delta;
+            if (cart[i].qty < 1) cart.splice(i, 1);
             renderCart();
             updateCartCount();
             saveCart();
         }
 
-        function removeFromCart(index) {
-            cart.splice(index, 1);
+        function removeFromCart(i) {
+            cart.splice(i, 1);
             renderCart();
             updateCartCount();
             saveCart();
         }
 
-        function showSection(section) {
+        function showSection(sec) {
             document.getElementById("catalog").classList.add("hidden");
             document.getElementById("cart").classList.add("hidden");
-            document.getElementById(section).classList.remove("hidden");
+            document.getElementById(sec).classList.remove("hidden");
+            if (sec === "cart") renderCart();
+        }
 
-            if (section === "cart") {
-                renderCart();
-            }
+        function toggleMobileMenu() {
+            document.getElementById("mobile-menu").classList.toggle("hidden");
         }
 
         function openOrderModal() {
-            if (cart.length === 0) return alert("Кошик порожній");
+            if (cart.length === 0) return alert("Кошик порожній!");
             document.getElementById("order-modal").classList.remove("hidden");
         }
 
         function submitOrder(e) {
             e.preventDefault();
-            const name = document.getElementById("name").value.trim();
-            const phone = document.getElementById("phone").value.trim();
-            const telegram = document.getElementById("telegram").value.trim() || "—";
-            const address = document.getElementById("address").value.trim();
-            const comment = document.getElementById("comment").value.trim() || "—";
+            const name = document.getElementById("name").value;
+            const phone = document.getElementById("phone").value;
+            const tg = document.getElementById("telegram").value || "—";
+            const address = document.getElementById("address").value;
+            const comment = document.getElementById("comment").value || "—";
 
-            let orderText = `🛒 Нове замовлення!\n\nІм'я: ${name}\nТел: ${phone}\nTelegram: ${telegram}\nАдреса: ${address}\nКоментар: ${comment}\n\nТовари:\n`;
-
+            let text = `🛒 Нове замовлення!\n\nІм'я: ${name}\nТел: ${phone}\nTelegram: ${tg}\nАдреса: ${address}\nКоментар: ${comment}\n\n`;
             let total = 0;
             cart.forEach(item => {
                 const sum = item.price * (item.qty || 1);
                 total += sum;
-                orderText += `${item.name} ${item.vol} × ${item.qty || 1} = ${sum} грн\n`;
+                text += `${item.name} ${item.vol} × ${item.qty || 1} = ${sum} грн\n`;
             });
-            orderText += `\nРазом: ${total} грн`;
+            text += `\nРазом: ${total} грн`;
 
             fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ chat_id: CHAT_ID, text: orderText, parse_mode: "HTML" })
-            }).catch(err => console.log("Telegram error", err));
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ chat_id: CHAT_ID, text: text })
+            }).catch(() => {});
 
-            // Показуємо успіх
             document.getElementById("order-modal").classList.add("hidden");
             document.getElementById("success-modal").classList.remove("hidden");
 
-            // Очищаємо кошик
             cart = [];
             saveCart();
             updateCartCount();
@@ -420,16 +395,11 @@
             showSection("catalog");
         }
 
-        function toggleMobileMenu() {
-            // поки що без змін (можемо покращити пізніше)
-            alert("Мобільне меню в розробці. Використовуйте десктопну навігацію поки що.");
-        }
-
-        // Ініціалізація
+        // Запуск
         window.onload = () => {
             loadCart();
             renderFilters();
-            filterProducts();        // замість renderProducts()
+            filterProducts();
             updateCartCount();
         };
     </script>
