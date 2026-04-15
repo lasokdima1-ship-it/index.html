@@ -7,23 +7,58 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        body { font-family: 'Inter', system_ui, sans-serif; background: #0a0a0a; overflow-x: hidden; }
-        .product-card { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); background: #1a1a2e; }
-        .product-card:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 20px 40px -12px rgba(139, 92, 246, 0.35); }
-        .product-img { height: 220px; object-fit: contain; background: #16213e; padding: 20px; border-radius: 20px; transition: transform 0.5s ease; }
-        .product-card:hover .product-img { transform: scale(1.08); }
+        body { 
+            font-family: 'Inter', system_ui, sans-serif; 
+            background: #0a0a0a; 
+            overflow-x: hidden; 
+        }
+        .product-card { 
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+            background: #1a1a2e; 
+        }
+        .product-card:hover { 
+            transform: translateY(-8px) scale(1.02); 
+            box-shadow: 0 20px 40px -12px rgba(139, 92, 246, 0.35); 
+        }
+        .product-img { 
+            height: 220px; 
+            object-fit: contain; 
+            background: #16213e; 
+            padding: 20px; 
+            border-radius: 20px; 
+            transition: transform 0.5s ease; 
+        }
+        .product-card:hover .product-img { 
+            transform: scale(1.08); 
+        }
 
-        .hero-bg { background: linear-gradient(135deg, #4c1d95 0%, #1e1b4b 100%); }
+        .hero-bg { 
+            background: linear-gradient(135deg, #4c1d95 0%, #1e1b4b 100%); 
+        }
 
-        .modal { animation: modalPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
-        @keyframes modalPop { from { transform: scale(0.75) translateY(40px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+        .modal { 
+            animation: modalPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); 
+        }
+        @keyframes modalPop { 
+            from { transform: scale(0.75) translateY(40px); opacity: 0; } 
+            to { transform: scale(1) translateY(0); opacity: 1; } 
+        }
 
         .floating-cart {
-            position: fixed; bottom: 20px; right: 20px; z-index: 999;
-            background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: white;
-            width: 65px; height: 65px; border-radius: 9999px;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 10px 20px -5px rgb(139 92 246 / 0.5); font-size: 30px;
+            position: fixed; 
+            bottom: 20px; 
+            right: 20px; 
+            z-index: 999;
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9); 
+            color: white;
+            width: 65px; 
+            height: 65px; 
+            border-radius: 9999px;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            box-shadow: 0 10px 20px -5px rgb(139 92 246 / 0.5); 
+            font-size: 30px;
         }
     </style>
 </head>
@@ -37,12 +72,14 @@
                     <div class="w-9 h-9 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-2xl flex items-center justify-center text-3xl shadow-lg">🍾</div>
                     <div>
                         <h1 class="text-2xl font-bold tracking-tight">АлкоДоставка</h1>
-                        <p class="text-violet-400 text-xs -mt-1">Преміум • 24/7</p>
+                        <p class="text-violet-400 text-xs -mt-1">Преміум • 24/7 • Україна</p>
                     </div>
                 </div>
 
                 <div class="flex items-center gap-4">
-                    <a href="https://t.me/founderAD" target="_blank" class="w-10 h-10 bg-violet-600 hover:bg-violet-700 flex items-center justify-center rounded-2xl transition-all active:scale-95">
+                    <!-- Маленька іконка Telegram -->
+                    <a href="https://t.me/founderAD" target="_blank" 
+                       class="w-10 h-10 bg-violet-600 hover:bg-violet-700 flex items-center justify-center rounded-2xl transition-all active:scale-95">
                         <i class="fab fa-telegram text-2xl"></i>
                     </a>
                     <button onclick="toggleMobileMenu()" class="w-10 h-10 flex flex-col items-center justify-center gap-1">
@@ -54,21 +91,23 @@
             </div>
         </div>
 
+        <!-- Mobile Menu -->
         <div id="mobile-menu" class="hidden bg-zinc-900 border-t border-violet-900">
             <div class="flex flex-col gap-5 px-4 py-6 text-lg">
                 <a onclick="showSection('catalog'); toggleMobileMenu()" class="cursor-pointer hover:text-violet-400 px-2 py-2">Каталог</a>
                 <a onclick="showSection('cart'); toggleMobileMenu()" class="cursor-pointer flex justify-between hover:text-violet-400 px-2 py-2">
-                    Кошик <span id="mobile-cart-count" class="bg-violet-500 text-white px-3 py-1 rounded-full text-sm font-bold">0</span>
+                    Кошик 
+                    <span id="mobile-cart-count" class="bg-violet-500 text-white px-3 py-1 rounded-full text-sm font-bold">0</span>
                 </a>
             </div>
         </div>
     </header>
 
     <!-- HERO -->
-    <div class="hero-bg py-20 text-center px-4">
+    <div class="hero-bg py-16 text-center px-4">
         <div class="max-w-xl mx-auto">
-            <h2 class="text-5xl font-bold tracking-tighter leading-tight">Доставимо алкоголь<br>навіть уночі</h2>
-            <p class="mt-5 text-lg text-violet-300">Преміум вибір • Швидка доставка • 24/7</p>
+            <h2 class="text-4xl font-bold tracking-tighter leading-tight amber-glow">Доставимо алкоголь<br>навіть уночі</h2>
+            <p class="mt-4 text-lg text-violet-300">Преміум вибір • Швидка доставка • 24/7</p>
         </div>
     </div>
 
@@ -101,7 +140,8 @@
                 <span class="font-medium">Разом:</span>
                 <span id="total" class="font-bold text-violet-400">0 грн</span>
             </div>
-            <button onclick="openOrderModal()" class="w-full bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 text-white py-7 rounded-3xl text-xl font-semibold">
+            <button onclick="openOrderModal()" 
+                    class="w-full bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 text-white py-7 rounded-3xl text-xl font-semibold">
                 Оформити замовлення
             </button>
         </div>
@@ -174,7 +214,7 @@
         const BOT_TOKEN = "8241760623:AAGfnf7OqvVPcnkW_EM5r3zgXN1blNZQ4Ig";
         let CHAT_ID = "8558975809";
 
-        const products = [ /* Твій повний список товарів */ 
+        const products = [
             {id:1, name:"Nemiroff Делікат", cat:"горілка", price:199, vol:"0.7л", img:"https://images.silpo.ua/products/1600x1600/92979d30-80f0-4958-9bab-4e890fdfbec0.png"},
             {id:2, name:"Хортиця Класична", cat:"горілка", price:169, vol:"0.5л", img:"https://tse2.mm.bing.net/th/id/OIP.Ye6FQF8nuk4hIyjAnlaQZwHaHa?rs=1&pid=ImgDetMain&o=7&rm=3"},
             {id:3, name:"Гетьман", cat:"горілка", price:189, vol:"0.7л", img:"https://image.maudau.com.ua/size/origin/products/73/4a/03/734a0331-b2a4-45a2-ad63-980af481d40f.jpg"},
@@ -236,9 +276,10 @@
 
         function updateCartCount() {
             const count = cart.reduce((sum, item) => sum + (item.qty || 1), 0);
-            document.getElementById("cart-count").textContent = count || 0;
-            document.getElementById("mobile-cart-count").textContent = count || 0;
-            document.getElementById("floating-count").textContent = count || 0;
+            const countStr = count > 0 ? count : "0";
+            document.getElementById("cart-count").textContent = countStr;
+            document.getElementById("mobile-cart-count").textContent = countStr;
+            document.getElementById("floating-count").textContent = countStr;
         }
 
         function showToast(text) {
@@ -412,7 +453,7 @@
             showSection("catalog");
         }
 
-        // Закриття модалки по кліку на фон
+        // Закриття модалки по фону
         document.addEventListener('DOMContentLoaded', () => {
             const modal = document.getElementById("order-modal");
             modal.addEventListener('click', (e) => {
