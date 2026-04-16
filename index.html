@@ -68,7 +68,7 @@
     <header class="sticky top-0 z-50 bg-black/95 backdrop-blur-md border-b border-violet-900">
         <div class="max-w-7xl mx-auto px-4 py-4">
             <div class="flex justify-between items-center">
-                <div class="flex items-center gap-3">
+                <div onclick="showSection('catalog')" class="flex items-center gap-3 cursor-pointer">
                     <div class="w-9 h-9 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-2xl flex items-center justify-center text-3xl shadow-lg">🍾</div>
                     <div>
                         <h1 class="text-2xl font-bold tracking-tight">Royal Spirits</h1>
@@ -81,7 +81,7 @@
                         <i class="fab fa-telegram text-2xl"></i>
                     </a>
                     <!-- Лічильник у шапці -->
-                    <button onclick="showSection('cart')" 
+                    <button onclick="showSection('cart')"
                             class="relative flex items-center gap-2 bg-zinc-900 hover:bg-zinc-800 px-5 py-2.5 rounded-3xl transition">
                         <i class="fas fa-shopping-bag text-xl"></i>
                         <span id="cart-count" class="bg-violet-500 text-white text-sm font-bold px-3 py-1 rounded-full">0</span>
@@ -94,7 +94,6 @@
                 </div>
             </div>
         </div>
-
         <!-- Mobile Menu -->
         <div id="mobile-menu" class="hidden bg-zinc-900 border-t border-violet-900">
             <div class="flex flex-col gap-5 px-4 py-6 text-lg">
@@ -137,7 +136,7 @@
     <section id="cart" class="max-w-7xl mx-auto px-4 py-10 hidden">
         <h2 class="text-4xl font-bold mb-8 text-violet-300">Ваш кошик</h2>
         <div id="cart-items" class="space-y-6"></div>
-      
+     
         <div class="mt-12 bg-zinc-900 p-8 rounded-3xl border border-violet-800">
             <div class="flex justify-between text-3xl mb-8">
                 <span class="font-medium">Разом:</span>
@@ -150,7 +149,7 @@
         </div>
     </section>
 
-    <!-- ORDER MODAL + SUCCESS MODAL + TOAST (без змін) -->
+    <!-- ORDER MODAL -->
     <div id="order-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
         <div class="modal bg-zinc-900 rounded-3xl p-8 max-w-md w-full border border-violet-700 shadow-2xl relative">
             <button onclick="closeOrderModal()" class="absolute top-5 right-5 text-4xl text-zinc-500 hover:text-white">×</button>
@@ -187,6 +186,7 @@
         </div>
     </div>
 
+    <!-- SUCCESS MODAL -->
     <div id="success-modal" class="hidden fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4">
         <div class="bg-zinc-900 rounded-3xl p-10 max-w-sm w-full text-center border border-violet-700">
             <div class="text-7xl mb-6">🎉</div>
@@ -198,6 +198,7 @@
         </div>
     </div>
 
+    <!-- TOAST -->
     <div id="toast" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-zinc-800 border border-violet-500 rounded-3xl shadow-2xl px-6 py-4 flex items-center gap-3 z-[70]">
         <i class="fas fa-check-circle text-violet-500 text-2xl"></i>
         <span id="toast-text" class="font-medium"></span>
@@ -213,7 +214,8 @@
         const BOT_TOKEN = "8241760623:AAGfnf7OqvVPcnkW_EM5r3zgXN1blNZQ4Ig";
         let CHAT_ID = "8558975809";
 
-        const products = [ /* всі твої товари залишив без змін */ 
+        const products = [
+            // === СТАРИЙ АЛКОГОЛЬ (залишив без змін) ===
             {id:1, name:"Nemiroff Делікат", cat:"горілка", price:199, vol:"0.7л", img:"https://images.silpo.ua/products/1600x1600/92979d30-80f0-4958-9bab-4e890fdfbec0.png"},
             {id:2, name:"Хортиця Класична", cat:"горілка", price:169, vol:"0.5л", img:"https://tse2.mm.bing.net/th/id/OIP.Ye6FQF8nuk4hIyjAnlaQZwHaHa?rs=1&pid=ImgDetMain&o=7&rm=3"},
             {id:3, name:"Гетьман", cat:"горілка", price:189, vol:"0.7л", img:"https://image.maudau.com.ua/size/origin/products/73/4a/03/734a0331-b2a4-45a2-ad63-980af481d40f.jpg"},
@@ -245,10 +247,42 @@
             {id:202, name:"Jack Daniel's", cat:"віскі", price:799, vol:"0.7л", img:"https://images.washingtonpost.com/?url=http://img.washingtonpost.com/news/morning-mix/wp-content/uploads/sites/21/2016/06/Jack-Daniels-Tennessee-Whiskey.jpg&w=1484&op=resize&opt=1&filter=antialias"},
             {id:703, name:"Johnnie Walker Black", cat:"віскі", price:899, vol:"0.7л", img:"https://tse2.mm.bing.net/th/id/OIP.CgXpB9FiBbGEE403U0jTWQHaHa?rs=1&pid=ImgDetMain&o=7&rm=3"},
             {id:704, name:"Chivas Regal", cat:"віскі", price:999, vol:"0.7л", img:"https://www.emporioaugusta.com.br/loja/image/cache/catalog/data/Whisky/chivas-12-1024x1024.jpg"},
-            {id:705, name:"Jim Beam", cat:"віскі", price:599, vol:"0.7л", img:"https://www.aklehr.com/wp-content/gallery/jim-beam/Jim-Beam_30.jpg"}
-              ];
-        
-      
+            {id:705, name:"Jim Beam", cat:"віскі", price:599, vol:"0.7л", img:"https://www.aklehr.com/wp-content/gallery/jim-beam/Jim-Beam_30.jpg"},
+
+            // === НОВІ ПРЕМІУМ РОМИ (15 шт.) ===
+            {id:1001, name:"Bumbu The Original", cat:"ром", price:849, vol:"0.7л", img:"https://via.placeholder.com/600x600/4c1d95/ffffff?text=Bumbu"},
+            {id:1002, name:"Appleton Estate 21 Year", cat:"ром", price:2499, vol:"0.7л", img:"https://via.placeholder.com/600x600/6d28d9/ffffff?text=Appleton+21"},
+            {id:1003, name:"Mount Gay 1703 Master Select", cat:"ром", price:1899, vol:"0.7л", img:"https://via.placeholder.com/600x600/7c3aed/ffffff?text=Mount+Gay"},
+            {id:1004, name:"Ron Zacapa Centenario 23", cat:"ром", price:1699, vol:"0.7л", img:"https://via.placeholder.com/600x600/8b5cf6/ffffff?text=Zacapa+23"},
+            {id:1005, name:"Diplomatico Reserva Exclusiva", cat:"ром", price:1399, vol:"0.7л", img:"https://via.placeholder.com/600x600/a78bfa/ffffff?text=Diplomatico"},
+            {id:1006, name:"Foursquare Exceptional Cask Selection", cat:"ром", price:2199, vol:"0.7л", img:"https://via.placeholder.com/600x600/c4b5fd/ffffff?text=Foursquare"},
+            {id:1007, name:"Plantation XO 20th Anniversary", cat:"ром", price:1599, vol:"0.7л", img:"https://via.placeholder.com/600x600/ddd6fe/ffffff?text=Plantation+XO"},
+            {id:1008, name:"Hampden Estate 8 Year", cat:"ром", price:1299, vol:"0.7л", img:"https://via.placeholder.com/600x600/e0e7ff/ffffff?text=Hampden"},
+            {id:1009, name:"El Dorado 21 Year", cat:"ром", price:2799, vol:"0.7л", img:"https://via.placeholder.com/600x600/ede9fe/ffffff?text=El+Dorado+21"},
+            {id:1010, name:"Barceló Imperial 40 Aniversario", cat:"ром", price:3299, vol:"0.7л", img:"https://via.placeholder.com/600x600/f3e8ff/ffffff?text=Barcelo+Imperial"},
+            {id:1011, name:"Dictador 20 Year", cat:"ром", price:1899, vol:"0.7л", img:"https://via.placeholder.com/600x600/e0bbff/ffffff?text=Dictador"},
+            {id:1012, name:"Santa Teresa 1796", cat:"ром", price:1499, vol:"0.7л", img:"https://via.placeholder.com/600x600/d8b4fe/ffffff?text=Santa+Teresa"},
+            {id:1013, name:"Brugal 1888", cat:"ром", price:2199, vol:"0.7л", img:"https://via.placeholder.com/600x600/c084fc/ffffff?text=Brugal+1888"},
+            {id:1014, name:"Rhum Barbancourt 15 Year", cat:"ром", price:1599, vol:"0.7л", img:"https://via.placeholder.com/600x600/b583f7/ffffff?text=Barbancourt"},
+            {id:1015, name:"Ten To One Reserve Cask 18 Year", cat:"ром", price:2899, vol:"0.7л", img:"https://via.placeholder.com/600x600/a855f7/ffffff?text=Ten+To+One"},
+
+            // === НОВІ ПРЕМІУМ ВІСКІ (15 шт.) ===
+            {id:2001, name:"Macallan 18 Year Sherry Oak", cat:"віскі", price:4499, vol:"0.7л", img:"https://via.placeholder.com/600x600/4c1d95/ffffff?text=Macallan+18"},
+            {id:2002, name:"Yamazaki 12 Year", cat:"віскі", price:5999, vol:"0.7л", img:"https://via.placeholder.com/600x600/6d28d9/ffffff?text=Yamazaki"},
+            {id:2003, name:"Lagavulin 16 Year", cat:"віскі", price:2899, vol:"0.7л", img:"https://via.placeholder.com/600x600/7c3aed/ffffff?text=Lagavulin"},
+            {id:2004, name:"Glenfiddich 21 Year", cat:"віскі", price:3999, vol:"0.7л", img:"https://via.placeholder.com/600x600/8b5cf6/ffffff?text=Glenfiddich+21"},
+            {id:2005, name:"Ardbeg Uigeadail", cat:"віскі", price:2199, vol:"0.7л", img:"https://via.placeholder.com/600x600/a78bfa/ffffff?text=Ardbeg"},
+            {id:2006, name:"The Dalmore 15 Year", cat:"віскі", price:3299, vol:"0.7л", img:"https://via.placeholder.com/600x600/c4b5fd/ffffff?text=Dalmore"},
+            {id:2007, name:"Redbreast 21 Year", cat:"віскі", price:4899, vol:"0.7л", img:"https://via.placeholder.com/600x600/ddd6fe/ffffff?text=Redbreast+21"},
+            {id:2008, name:"Talisker 18 Year", cat:"віскі", price:2599, vol:"0.7л", img:"https://via.placeholder.com/600x600/e0e7ff/ffffff?text=Talisker"},
+            {id:2009, name:"Highland Park 18 Year", cat:"віскі", price:2799, vol:"0.7л", img:"https://via.placeholder.com/600x600/ede9fe/ffffff?text=Highland+Park"},
+            {id:2010, name:"Bowmore 18 Year", cat:"віскі", price:3199, vol:"0.7л", img:"https://via.placeholder.com/600x600/f3e8ff/ffffff?text=Bowmore"},
+            {id:2011, name:"Glenmorangie Signet", cat:"віскі", price:3999, vol:"0.7л", img:"https://via.placeholder.com/600x600/e0bbff/ffffff?text=Glenmorangie"},
+            {id:2012, name:"Balvenie 21 Year PortWood", cat:"віскі", price:5299, vol:"0.7л", img:"https://www.whiskyshop.com/media/catalog/product/b/a/balvenie_21yo_portwood_ps_1.jpg?width=2500&store=whiskyshop&image-type=image"},
+            {id:2013, name:"Laphroaig 25 Year", cat:"віскі", price:8999, vol:"0.7л", img:"https://img.thewhiskyexchange.com/900/lrgob.25yov5.jpg"},
+            {id:2014, name:"Johnnie Walker Blue Label", cat:"віскі", price:3299, vol:"0.7л", img:"https://images.ctfassets.net/glsfy1cpffmh/6nyOdC2ZUtEV26i4AjqUpN/dda7d6fb5666c70857af5c612e3afbf4/johnnie-walker-blue-label-1-transparent.png?fm=webp&w=1920&q=30"},
+            {id:2015, name:"Chivas Regal 25 Year", cat:"віскі", price:6499, vol:"0.7л", img:"https://spiritly.com/cdn/shop/files/chivas-regal-25-years-whisky-5000299284926-39192459935996.jpg?v=1683020107"}
+        ];
 
         let cart = [];
         let currentFilter = "all";
@@ -265,14 +299,9 @@
         function updateCartCount() {
             const count = cart.reduce((sum, item) => sum + (item.qty || 1), 0);
             const countStr = count.toString();
-
-            // Оновлюємо всі лічильники
-            const els = [
-                document.getElementById("cart-count"),
-                document.getElementById("mobile-cart-count"),
-                document.getElementById("floating-count")
-            ];
-            els.forEach(el => { if (el) el.textContent = countStr; });
+            document.getElementById("cart-count").textContent = countStr;
+            document.getElementById("mobile-cart-count").textContent = countStr;
+            document.getElementById("floating-count").textContent = countStr;
         }
 
         function showToast(text) {
@@ -285,20 +314,14 @@
         function addToCart(id) {
             const prod = products.find(p => p.id === id);
             if (!prod) return;
-
             const exist = cart.find(item => item.id === id);
-            if (exist) {
-                exist.qty = (exist.qty || 1) + 1;
-            } else {
-                cart.push({...prod, qty: 1});
-            }
-
+            if (exist) exist.qty = (exist.qty || 1) + 1;
+            else cart.push({...prod, qty: 1});
             updateCartCount();
             saveCart();
             showToast(`✅ ${prod.name} додано в кошик`);
         }
 
-        // решта функцій (renderFilters, filterProducts, renderProducts, renderCart і т.д.) залишились майже без змін
         function renderFilters() {
             const cats = ["all", ...new Set(products.map(p => p.cat))];
             let html = `<button onclick="setFilter('all')" class="px-5 py-2.5 rounded-3xl text-sm font-medium whitespace-nowrap ${currentFilter==='all' ? 'bg-violet-600 text-white' : 'bg-zinc-800 hover:bg-zinc-700'}">Всі (${products.length})</button>`;
@@ -325,11 +348,9 @@
                 const matchSearch = !search || p.name.toLowerCase().includes(search);
                 return matchCat && matchSearch;
             });
-
             if (sortType === "price-low") filtered.sort((a,b) => a.price - b.price);
             if (sortType === "price-high") filtered.sort((a,b) => b.price - a.price);
             if (sortType === "name") filtered.sort((a,b) => a.name.localeCompare(b.name, 'uk'));
-
             renderProducts(filtered);
         }
 
@@ -344,7 +365,7 @@
                         <div class="text-xs text-zinc-400 mt-1">${p.vol}</div>
                         <div class="flex justify-between items-center mt-6">
                             <div class="text-2xl font-bold">${p.price}<span class="text-sm text-zinc-400 ml-1">грн</span></div>
-                            <button onclick="addToCart(${p.id}); event.stopImmediatePropagation()" 
+                            <button onclick="addToCart(${p.id}); event.stopImmediatePropagation()"
                                     class="bg-violet-600 hover:bg-violet-700 text-white px-5 py-2.5 rounded-2xl text-sm font-semibold transition">
                                 В кошик
                             </button>
@@ -424,7 +445,6 @@
             const tg = document.getElementById("telegram").value || "—";
             const address = document.getElementById("address").value;
             const comment = document.getElementById("comment").value || "—";
-
             let text = `🛒 Нове замовлення!\n\nІм'я: ${name}\nТел: ${phone}\nTelegram: ${tg}\nАдреса: ${address}\nКоментар: ${comment}\n\n`;
             let total = 0;
             cart.forEach(item => {
@@ -433,20 +453,16 @@
                 text += `${item.name} ${item.vol} × ${item.qty || 1} = ${sum} грн\n`;
             });
             text += `\nРазом: ${total} грн`;
-
             fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({ chat_id: CHAT_ID, text: text })
             }).catch(() => {});
-
-            document.getElementById("order-modal").classList.add("hidden");
-            document.getElementById("success-modal").classList.remove("hidden");
-
-            // Очищаємо кошик після успішного замовлення
             cart = [];
             saveCart();
             updateCartCount();
+            document.getElementById("order-modal").classList.add("hidden");
+            document.getElementById("success-modal").classList.remove("hidden");
         }
 
         function closeSuccessModal() {
@@ -454,7 +470,6 @@
             showSection("catalog");
         }
 
-        // Ініціалізація
         window.onload = () => {
             loadCart();
             renderFilters();
